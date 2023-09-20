@@ -1,7 +1,8 @@
-# Ignore built files except build/index.js
+# Ignore built files
 build/*
 !build/index.js
 dist/*
 bundle.js
 .*/*
 .*
+tsconfig.json
