@@ -1,3 +1,12 @@
-const a = 'Hello world'
+import express from 'express'
 
-console.log(a)
+const app = express()
+const port = 3000
+
+app.get('/', (_req, res) => {
+  res.send('Hello world :D')
+})
+
+app.listen(port, () => {
+  console.log(`Server on listing http://localhost${port}`)
+})
