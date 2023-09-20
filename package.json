@@ -1,0 +1,40 @@
+{
+  "name": "api-movies",
+  "version": "1.0.0",
+  "description": "Api movies with mondogb and mysql",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "DEBUG=app:* node --watch index.js",
+    "start": "NODE_ENV=production node index.js",
+    "tsc": "tsc",
+    "test": "test",
+    "lint": "ts-standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnsi15/api-movies.git"
+  },
+  "keywords": [
+    "api",
+    "movies",
+    "node.js",
+    "express",
+    "joi",
+    "bum",
+    "typescript"
+  ],
+  "author": "John Serrano",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/johnsi15/api-movies/issues"
+  },
+  "homepage": "https://github.com/johnsi15/api-movies#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "6.7.2",
+    "@typescript-eslint/parser": "6.7.2",
+    "eslint": "8.49.0",
+    "ts-node-dev": "2.0.0",
+    "typescript": "5.2.2"
+  }
+}
