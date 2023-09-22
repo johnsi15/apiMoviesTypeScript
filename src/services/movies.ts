@@ -1,3 +1,4 @@
+import type { WithId } from 'mongodb'
 import { MongoLib } from '../lib/mongo'
 
 export class MoviesService {
@@ -9,11 +10,17 @@ export class MoviesService {
     this.mongoDB = new MongoLib()
   }
 
-  async getMovies ({ tags }: { tags: string[] }): Promise<string | null> {
+  async getMovies ({ tags }: { tags: Array<string | Record<'$in', string>> }): Promise<Array<WithId<Document>> | null> {
     // const query = tags && { tags: { $in: tags } }
-    const query = tags
+    let query = { }
+
+    if (Array.isArray(tags)) {
+      query = { tags: { $in: tags } }
+    }
+
     const movies = await this.mongoDB.getAll(this.collection, query)
-    console.log(movies)
+    console.log({ movies })
+
     return movies
   }
 
@@ -48,8 +55,3 @@ export class MoviesService {
   //   return patchMovieId
   // }
 }
-
-const test = new MoviesService()
-
-const result = test.getMovies({ tags: [] })
-console.log(result)

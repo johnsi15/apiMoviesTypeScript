@@ -1,7 +1,6 @@
-import { CURSOR_FLAGS, MongoClient, ObjectId, ServerApiVersion } from 'mongodb'
+import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb'
 import type { Db, WithId, Document } from 'mongodb'
 import { config } from '../config/index'
-import { object } from 'joi'
 
 const USER = encodeURIComponent(config.dbUser)
 const PASSWORD = encodeURIComponent(config.dbPassword)
@@ -42,7 +41,7 @@ export class MongoLib {
     return MongoLib.connection
   }
 
-  async getAll (collection: string, query: string[]): Promise<Array<WithId<Document>> | null> {
+  async getAll (collection: string, query: { tags?: string | null }): Promise<Array<WithId<Document>> | null> {
     return await this.connect().then(async db => {
       if (db instanceof Error) {
         return null
@@ -75,16 +74,22 @@ export class MongoLib {
       }).then(result => result?.insertedId)
   }
 
-  // update (collection, id, data) {
-  //   return this.connect()
-  //     .then(db => {
-  //       return db
-  //         .collection(collection)
-  //         .updateOne({ _id: ObjectId(id) }, { $set: data }, { upsert: true })
-  //     }).then(result => result.upsertedId || id)
-  // }
+  async update (collection: string, id: string, data: Document): Promise<string | ObjectId> {
+    return await this.connect()
+      .then(async db => {
+        if (db instanceof Error) {
+          return null
+        }
 
-  async delete (collection: string, id: string): Promise<string | null> {
+        const objectId = new ObjectId(id)
+
+        return await db
+          .collection(collection)
+          .updateOne({ _id: objectId }, { $set: data }, { upsert: true })
+      }).then(result => result?.upsertedId ?? id)
+  }
+
+  async delete (collection: string, id: string): Promise<string> {
     return await this.connect()
       .then(async db => {
         if (db instanceof Error) {
@@ -93,8 +98,6 @@ export class MongoLib {
         const objectId = new ObjectId(id)
         return await db
           .collection(collection).deleteOne({ _id: objectId })
-      })
-      .catch(err => err)
-      .finally(() => id)
+      }).then(() => id)
   }
 }
