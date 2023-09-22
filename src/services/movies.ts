@@ -9,7 +9,7 @@ export class MoviesService {
     this.mongoDB = new MongoLib()
   }
 
-  async getMovies ({ tags }: { tags: Array<string | null> }): Promise<string> {
+  async getMovies ({ tags }: { tags: string[] }): Promise<string | null> {
     // const query = tags && { tags: { $in: tags } }
     const query = tags
     const movies = await this.mongoDB.getAll(this.collection, query)

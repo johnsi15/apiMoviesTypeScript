@@ -1,5 +1,7 @@
-import { type Db, MongoClient, ObjectId, ServerApiVersion } from 'mongodb'
+import { CURSOR_FLAGS, MongoClient, ObjectId, ServerApiVersion } from 'mongodb'
+import type { Db, WithId, Document } from 'mongodb'
 import { config } from '../config/index'
+import { object } from 'joi'
 
 const USER = encodeURIComponent(config.dbUser)
 const PASSWORD = encodeURIComponent(config.dbPassword)
@@ -40,36 +42,38 @@ export class MongoLib {
     return MongoLib.connection
   }
 
-  async getAll (collection: string, query: Array<string | null>): Promise<string> {
-    const database = await this.connect().then(async db => {
+  async getAll (collection: string, query: string[]): Promise<Array<WithId<Document>> | null> {
+    return await this.connect().then(async db => {
       if (db instanceof Error) {
-        console.error('Error connecting to the database')
-        console.error(db)
-        return null // Handle the error gracefully, you can return null or throw an exception here.
+        return null
       }
 
       return await db.collection(collection).find(query).toArray()
     })
-    console.log(database)
-
-    return 'hello world'
   }
 
-  // get (collection, id) {
-  //   return this.connect()
-  //     .then(db => {
-  //       return db
-  //         .collection(collection).findOne({ _id: ObjectId(id) })
-  //     })
-  // }
+  async getById (collection: string, id: string): Promise<WithId<Document> | null> {
+    return await this.connect()
+      .then(async db => {
+        if (db instanceof Error) {
+          return null
+        }
+        const objectId = new ObjectId(id)
 
-  // create (collection, data) {
-  //   return this.connect()
-  //     .then(db => {
-  //       return db
-  //         .collection(collection).insertOne(data)
-  //     }).then(result => result.insertedId)
-  // }
+        return await db.collection(collection).findOne({ _id: objectId })
+      })
+  }
+
+  async create (collection: string, data: Document): Promise<ObjectId | undefined> {
+    return await this.connect()
+      .then(async db => {
+        if (db instanceof Error) {
+          return null
+        }
+        return await db
+          .collection(collection).insertOne(data)
+      }).then(result => result?.insertedId)
+  }
 
   // update (collection, id, data) {
   //   return this.connect()
@@ -80,11 +84,17 @@ export class MongoLib {
   //     }).then(result => result.upsertedId || id)
   // }
 
-  // delete (collection, id) {
-  //   return this.connect()
-  //     .then(db => {
-  //       return db
-  //         .collection(collection).deleteOne({ _id: ObjectId(id) })
-  //     }).then(() => id)
-  // }
+  async delete (collection: string, id: string): Promise<string | null> {
+    return await this.connect()
+      .then(async db => {
+        if (db instanceof Error) {
+          return null
+        }
+        const objectId = new ObjectId(id)
+        return await db
+          .collection(collection).deleteOne({ _id: objectId })
+      })
+      .catch(err => err)
+      .finally(() => id)
+  }
 }
