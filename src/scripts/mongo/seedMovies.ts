@@ -1,9 +1,8 @@
-// DEBUG=app:* node scripts/mongo/seedMovies.js
+// DEBUG=app:* npx ts-node ./src/scripts/mongo/seedMovies.ts
 
 import chalk from 'chalk'
 import { MongoLib } from '../../lib/mongo'
 import { moviesMock } from '../../utils/mocks/movies'
-// const debug = require('debug')('app:scripts:movies')
 import { debug } from 'debug'
 
 const logger = debug('app:scripts:movies')
@@ -17,7 +16,7 @@ async function seedMovies (): Promise<void> {
     })
 
     await Promise.all(promises)
-    logger(chalk.green(`${promises.length} movies have been created succesfully`)) // prettier-ignore
+    logger(chalk.green(`${promises.length} movies have been created succesfully`))
     return process.exit(0)
   } catch (error) {
     logger(chalk.red(error))

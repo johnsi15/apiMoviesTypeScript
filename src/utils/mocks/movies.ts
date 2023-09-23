@@ -19,7 +19,7 @@ const createRandomMovies = (count: number): Movie[] => {
     movies.push({
       id: faker.string.uuid(),
       title: faker.lorem.words(3),
-      year: faker.number.int({ max: 2077, min: 1888 }),
+      year: faker.number.int({ max: 2024, min: 1888 }),
       cover: faker.image.urlPicsumPhotos(),
       description: faker.lorem.paragraph(),
       duration: faker.number.int({ min: 1, max: 300 }),

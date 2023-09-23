@@ -11,7 +11,7 @@ const MONGO_URI = `mongodb+srv://${USER}:${PASSWORD}@${config.dbHost}/?retryWrit
 export class MongoLib {
   private readonly client: MongoClient
   private readonly dbName: string | undefined
-  private static connection: Db | Error
+  private static connection: Db | Error | null = null
 
   constructor () {
     this.client = new MongoClient(MONGO_URI, {
@@ -24,8 +24,8 @@ export class MongoLib {
     this.dbName = DB_NAME
   }
 
-  private async connect (): Promise<Db | Error> {
-    if (MongoLib.connection != null) {
+  private async connect (): Promise<Db | Error | null> {
+    if (MongoLib.connection == null) {
       try {
         await this.client.connect()
 
@@ -43,7 +43,7 @@ export class MongoLib {
 
   async getAll (collection: string, query: { tags?: string | null }): Promise<Array<WithId<Document>> | null> {
     return await this.connect().then(async db => {
-      if (db instanceof Error) {
+      if (db instanceof Error || db == null) {
         return null
       }
 
@@ -54,7 +54,7 @@ export class MongoLib {
   async getById (collection: string, id: string): Promise<WithId<Document> | null> {
     return await this.connect()
       .then(async db => {
-        if (db instanceof Error) {
+        if (db instanceof Error || db == null) {
           return null
         }
         const objectId = new ObjectId(id)
@@ -66,7 +66,7 @@ export class MongoLib {
   async create (collection: string, data: Document): Promise<ObjectId | undefined> {
     return await this.connect()
       .then(async db => {
-        if (db instanceof Error) {
+        if (db instanceof Error || db == null) {
           return null
         }
         return await db
@@ -77,7 +77,7 @@ export class MongoLib {
   async update (collection: string, id: string, data: Document | string): Promise<string | ObjectId> {
     return await this.connect()
       .then(async db => {
-        if (db instanceof Error) {
+        if (db instanceof Error || db == null) {
           return null
         }
 
@@ -92,7 +92,7 @@ export class MongoLib {
   async delete (collection: string, id: string): Promise<string> {
     return await this.connect()
       .then(async db => {
-        if (db instanceof Error) {
+        if (db instanceof Error || db == null) {
           return null
         }
         const objectId = new ObjectId(id)
