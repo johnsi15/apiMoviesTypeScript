@@ -1,4 +1,4 @@
-import type { WithId } from 'mongodb'
+import type { WithId, Document, ObjectId } from 'mongodb'
 import { MongoLib } from '../lib/mongo'
 
 export class MoviesService {
@@ -10,7 +10,7 @@ export class MoviesService {
     this.mongoDB = new MongoLib()
   }
 
-  async getMovies ({ tags }: { tags: Array<string | Record<'$in', string>> }): Promise<Array<WithId<Document>> | null> {
+  async getMovies ({ tags }: { tags: Array<string | Record<'$in', string>> }): Promise<Array<WithId<Document>> | []> {
     // const query = tags && { tags: { $in: tags } }
     let query = { }
 
@@ -21,37 +21,32 @@ export class MoviesService {
     const movies = await this.mongoDB.getAll(this.collection, query)
     console.log({ movies })
 
-    return movies
+    return movies ?? []
   }
 
-  // async getMovies ({ tags }) {
-  //   const query = tags && { tags: { $in: tags } }
-  //   const movies = await this.mongoDB.getAll(this.collection, query)
-  //   return movies || []
-  // }
+  async getMovie ({ movieId }: { movieId: string }): Promise<WithId<Document> | null> {
+    const movie = await this.mongoDB.getById(this.collection, movieId)
+    return movie ?? null
+  }
 
-  // async getMovie ({ movieId }) {
-  //   const movie = await this.mongoDB.get(this.collection, movieId)
-  //   return movie || {}
-  // }
+  async createMovie ({ movie }: { movie: Document }): Promise<ObjectId | undefined> {
+    const createMovieId = await this.mongoDB.create(this.collection, movie)
+    return createMovieId
+  }
 
-  // async createMovie ({ movie }) {
-  //   const createMovieId = await this.mongoDB.create(this.collection, movie)
-  //   return createMovieId
-  // }
+  async updateMovie ({ movieId, movie }: { movieId: string, movie: Document | string } = { movieId: '', movie: '' }): Promise<string | ObjectId> {
+    // validate si pasan un moviId vacio y un movie ??¿¿
+    const updatedMovieId = await this.mongoDB.update(this.collection, movieId, movie)
+    return updatedMovieId
+  }
 
-  // async updateMovie ({ movieId, movie } = {}) {
-  //   const updatedMovieId = await this.mongoDB.update(this.collection, movieId, movie)
-  //   return updatedMovieId
-  // }
+  async deleteMovie ({ movieId }: { movieId: string }): Promise<string> {
+    const deletedMovieId = await this.mongoDB.delete(this.collection, movieId)
+    return deletedMovieId
+  }
 
-  // async deleteMovie ({ movieId }) {
-  //   const deletedMovieId = await this.mongoDB.delete(this.collection, movieId)
-  //   return deletedMovieId
-  // }
-
-  // async patchMovie ({ movieId, movie }) {
-  //   const patchMovieId = await this.mongoDB.update(this.collection, movieId, movie)
-  //   return patchMovieId
-  // }
+  async patchMovie ({ movieId, movie }: { movieId: string, movie: Document | string } = { movieId: '', movie: '' }): Promise<string | ObjectId> {
+    const patchMovieId = await this.mongoDB.update(this.collection, movieId, movie)
+    return patchMovieId
+  }
 }

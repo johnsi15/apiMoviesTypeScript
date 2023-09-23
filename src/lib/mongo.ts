@@ -74,7 +74,7 @@ export class MongoLib {
       }).then(result => result?.insertedId)
   }
 
-  async update (collection: string, id: string, data: Document): Promise<string | ObjectId> {
+  async update (collection: string, id: string, data: Document | string): Promise<string | ObjectId> {
     return await this.connect()
       .then(async db => {
         if (db instanceof Error) {
