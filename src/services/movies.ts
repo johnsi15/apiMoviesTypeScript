@@ -10,9 +10,9 @@ export class MoviesService {
     this.mongoDB = new MongoLib()
   }
 
-  async getMovies ({ tags }: { tags: Array<string | Record<'$in', string>> }): Promise<Array<WithId<Document>> | []> {
+  async getMovies ({ tags }: { tags: Array<string | Record<'$in', string[]>> }): Promise<Array<WithId<Document>> | []> {
     // const query = tags && { tags: { $in: tags } }
-    let query = { }
+    let query = {}
 
     if (Array.isArray(tags)) {
       query = { tags: { $in: tags } }
