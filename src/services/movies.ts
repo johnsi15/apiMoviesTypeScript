@@ -10,16 +10,19 @@ export class MoviesService {
     this.mongoDB = new MongoLib()
   }
 
-  async getMovies ({ tags }: { tags: Array<string | Record<'$in', string[]>> }): Promise<Array<WithId<Document>> | []> {
+  async getMovies ({ tags }: { tags: string[] | string }): Promise<Array<WithId<Document>> | []> {
     // const query = tags && { tags: { $in: tags } }
+    console.log(tags)
     let query = {}
 
     if (Array.isArray(tags)) {
       query = { tags: { $in: tags } }
+    } else {
+      query = { tags }
     }
 
     const movies = await this.mongoDB.getAll(this.collection, query)
-    console.log({ movies })
+    // console.log({ movies })
 
     return movies ?? []
   }

@@ -24,7 +24,7 @@ export function moviesApi (app: Express): void {
   // router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:movies']), async function (req, res, next) {
   router.get('/', async function (req, res, next) {
     // cacheResponse(res, FIVE_MINUTES_IN_SECONDS)
-    const { tags } = req.query as { tags: Array<string | Record<'$in', string[]>> }
+    const { tags } = req.query as { tags: string[] | string }
 
     try {
       const movies = await moviesService.getMovies({ tags })
@@ -40,21 +40,22 @@ export function moviesApi (app: Express): void {
 
   // router.get('/:movieId', passport.authenticate('jwt', { session: false }),
   //   scopesValidationHandler(['read:movies']), validationHandler({ movieId: movieIdSchema }, 'params'), async function (req, res, next) {
-  //     cacheResponse(res, SIXTY_MINUTES_IN_SECONDS)
+  router.get('/:movieId', async function (req, res, next) {
+    // cacheResponse(res, SIXTY_MINUTES_IN_SECONDS)
 
-  //     const { movieId } = req.params
+    const { movieId } = req.params
 
-  //     try {
-  //       const movie = await moviesService.getMovie({ movieId })
+    try {
+      const movie = await moviesService.getMovie({ movieId })
 
-  //       res.status(200).json({
-  //         data: movie,
-  //         message: 'movie retrieved'
-  //       })
-  //     } catch (err) {
-  //       next(err)
-  //     }
-  //   })
+      res.status(200).json({
+        data: movie,
+        message: 'movie retrieved'
+      })
+    } catch (err) {
+      next(err)
+    }
+  })
 
   // router.post('/', passport.authenticate('jwt', { session: false }),
   //   scopesValidationHandler(['create:movies']),
