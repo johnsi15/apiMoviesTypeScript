@@ -1,23 +1,11 @@
 import { faker } from '@faker-js/faker'
-
-export interface Movie {
-  id: string
-  title: string
-  year: number
-  cover: string
-  description: string
-  duration: number
-  contentRating: string
-  source: string
-  tags: string[]
-}
+import { type Movie } from '../../types'
 
 const createRandomMovies = (count: number): Movie[] => {
   const movies = []
   for (let index = 0; index < count; index++) {
     // const element = array[index];
     movies.push({
-      id: faker.string.uuid(),
       title: faker.lorem.words(3),
       year: faker.number.int({ max: 2024, min: 1888 }),
       cover: faker.image.urlPicsumPhotos(),

@@ -1,15 +1,5 @@
 import Joi from 'joi'
-
-export interface Movie {
-  title: string
-  year: number
-  cover: string
-  description: string
-  duration: number
-  contentRating: string
-  source: string
-  tags: string[]
-}
+import { type Movie } from '../types'
 
 export type MoviePartial = Joi.PartialSchemaMap<Movie>
 

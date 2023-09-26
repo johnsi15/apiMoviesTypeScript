@@ -12,12 +12,12 @@ export class MoviesService {
 
   async getMovies ({ tags }: { tags: string[] | string }): Promise<Array<WithId<Document>> | []> {
     // const query = tags && { tags: { $in: tags } }
-    console.log(tags)
+    // console.log(tags)
     let query = {}
 
     if (Array.isArray(tags)) {
       query = { tags: { $in: tags } }
-    } else {
+    } else if (typeof tags === 'string') {
       query = { tags }
     }
 
