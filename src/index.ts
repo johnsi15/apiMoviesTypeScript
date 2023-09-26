@@ -5,7 +5,7 @@ import { config } from './config/index'
 import { moviesApi } from './routes/movies'
 // import userMoviesApi from './routes/userMovies'
 // import authApi from './routes/auth'
-// import { wrapErrors, logErrors, errorHandler } from './utils/middleware/errorHandlers'
+import { wrapErrors, logErrors, clientErrorHandler } from './utils/middleware/errorHandlers'
 import { notFoundHandler } from './utils/middleware/notFoundHandler'
 const app = express()
 const port = config.port
@@ -23,9 +23,9 @@ moviesApi(app)
 app.use(notFoundHandler)
 
 // Errors middleware
-// app.use(logErrors)
-// app.use(wrapErrors)
-// app.use(errorHandler)
+app.use(logErrors)
+app.use(wrapErrors)
+app.use(clientErrorHandler)
 
 app.listen(port, () => {
   console.log(`Server on listing http://localhost${port}`)

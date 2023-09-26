@@ -6,5 +6,7 @@ export interface Movie {
   duration: number
   contentRating: string
   source: string
-  tags: string[]
+  tags?: string[]
 }
+
+export type MoviePartial = Joi.PartialSchemaMap<Movie>

@@ -1,11 +1,9 @@
 import Joi from 'joi'
-import { type Movie } from '../types'
+import { type MoviePartial } from '../types'
 
-export type MoviePartial = Joi.PartialSchemaMap<Movie>
-
-const createSchema = (schema: MoviePartial): MoviePartial => {
-  return Joi.object().keys(schema)
-}
+// const createSchema = (schema: MoviePartial): MoviePartial => {
+//   return Joi.object().keys(schema)
+// }
 
 const commonRules = {
   title: Joi.string().max(80),
@@ -20,7 +18,7 @@ const commonRules = {
 
 export const movieIdSchema = Joi.string().regex(/^[0-9a-fA-F]{24}$/)
 
-export const createMovieSchema: MoviePartial = createSchema({
+export const createMovieSchema: MoviePartial = {
   ...commonRules,
   title: commonRules.title.required(),
   year: commonRules.year.required(),
@@ -30,8 +28,8 @@ export const createMovieSchema: MoviePartial = createSchema({
   contentRating: commonRules.contentRating.required(),
   source: commonRules.source.required(),
   tags: commonRules.tags
-})
+}
 
-export const updateMovieSchema: MoviePartial = createSchema({
+export const updateMovieSchema: MoviePartial = {
   ...commonRules
-})
+}

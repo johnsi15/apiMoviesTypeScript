@@ -18,7 +18,7 @@ export class MoviesService {
     if (Array.isArray(tags)) {
       query = { tags: { $in: tags } }
     } else if (typeof tags === 'string') {
-      query = { tags }
+      query = { tags: { $elemMatch: { $regex: tags, $options: 'i' } } }
     }
 
     const movies = await this.mongoDB.getAll(this.collection, query)

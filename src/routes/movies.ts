@@ -4,9 +4,8 @@ import type { Express } from 'express'
 // import passport from 'passport'
 import { MoviesService } from '../services/movies'
 
-// import { movieIdSchema, createMovieSchema, updateMovieSchema } from '../schemas/movies'
-
-// import validationHandler from '../utils/middleware/validationHandler'
+import { createMovieSchema } from '../schemas/movies'
+import { validationHandler } from '../utils/middleware/validationHandler'
 // import scopesValidationHandler from '../utils/middleware/scopesValidation'
 
 // import cacheResponse from '../utils/cacheReponse'
@@ -60,19 +59,21 @@ export function moviesApi (app: Express): void {
   // router.post('/', passport.authenticate('jwt', { session: false }),
   //   scopesValidationHandler(['create:movies']),
   //   validationHandler(createMovieSchema), async function (req, res, next) {
-  //     const { body: movie } = req
+  router.post('/', validationHandler(createMovieSchema), async function (req, res, next) {
+    const { body: movie } = req
+    console.log({ movie })
 
-  //     try {
-  //       const createdMovieId = await moviesService.createMovie({ movie })
+    try {
+      const createdMovieId = await moviesService.createMovie({ movie })
 
-  //       res.status(201).json({
-  //         data: createdMovieId,
-  //         message: 'movie created'
-  //       })
-  //     } catch (err) {
-  //       next(err)
-  //     }
-  //   })
+      res.status(201).json({
+        data: createdMovieId,
+        message: 'movie created'
+      })
+    } catch (err) {
+      next(err)
+    }
+  })
 
   // // PUT Reemplazar datos.
   // router.put('/:movieId', passport.authenticate('jwt', { session: false }),
