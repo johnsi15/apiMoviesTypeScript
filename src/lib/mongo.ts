@@ -41,7 +41,7 @@ export class MongoLib {
     return MongoLib.connection
   }
 
-  async getAll (collection: string, query: { tags?: string | null }): Promise<Array<WithId<Document>> | null> {
+  async getAll (collection: string, query: { tags?: string | null, email?: string }): Promise<Array<WithId<Document>> | null> {
     return await this.connect().then(async db => {
       if (db instanceof Error || db == null) {
         return null
