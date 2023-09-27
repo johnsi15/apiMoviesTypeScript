@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb'
 import type { Db, WithId, Document } from 'mongodb'
+import { type Query } from '../types'
 import { config } from '../config/index'
 
 const USER = encodeURIComponent(config.dbUser)
@@ -41,7 +42,7 @@ export class MongoLib {
     return MongoLib.connection
   }
 
-  async getAll (collection: string, query: { tags?: string | null, email?: string }): Promise<Array<WithId<Document>> | null> {
+  async getAll (collection: string, query: Query): Promise<Array<WithId<Document>> | null> {
     return await this.connect().then(async db => {
       if (db instanceof Error || db == null) {
         return null

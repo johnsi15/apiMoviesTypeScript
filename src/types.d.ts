@@ -22,3 +22,9 @@ export interface User {
 export interface UserPartial extends Joi.PartialSchemaMap<User> {
   isAdmin?: boolean | undefined | BooleanSchema
 }
+
+export interface Query {
+  tags?: string | null
+  email?: string
+  token?: string
+}
