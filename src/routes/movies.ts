@@ -4,7 +4,7 @@ import type { Express } from 'express'
 // import passport from 'passport'
 import { MoviesService } from '../services/movies'
 
-import { createMovieSchema } from '../schemas/movies'
+import { createMovieSchema, movieIdSchema, updateMovieSchema } from '../schemas/movies'
 import { validationHandler } from '../utils/middleware/validationHandler'
 // import scopesValidationHandler from '../utils/middleware/scopesValidation'
 
@@ -75,39 +75,41 @@ export function moviesApi (app: Express): void {
     }
   })
 
-  // // PUT Reemplazar datos.
   // router.put('/:movieId', passport.authenticate('jwt', { session: false }),
   //   scopesValidationHandler(['update:movies']), validationHandler({ movieId: movieIdSchema }, 'params'),
   //   validationHandler(updateMovieSchema), async function (req, res, next) {
-  //     const { movieId } = req.params
-  //     const { body: movie } = req
+  router.put('/:movieId', validationHandler({ movieId: movieIdSchema }, 'params'),
+    validationHandler(updateMovieSchema), async function (req, res, next) {
+      const { movieId } = req.params
+      const { body: movie } = req
 
-  //     try {
-  //       const updateMovieId = await moviesService.updateMovie({ movieId, movie })
+      try {
+        const updateMovieId = await moviesService.updateMovie({ movieId, movie })
 
-  //       res.status(200).json({
-  //         data: updateMovieId,
-  //         message: 'movie update'
-  //       })
-  //     } catch (err) {
-  //       next(err)
-  //     }
-  //   })
+        res.status(200).json({
+          data: updateMovieId,
+          message: 'movie update'
+        })
+      } catch (err) {
+        next(err)
+      }
+    })
 
   // router.delete('/:movieId', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['delete:movies']), validationHandler({ movieId: movieIdSchema }, 'params'), async function (req, res, next) {
-  //   const { movieId } = req.params
+  router.delete('/:movieId', validationHandler({ movieId: movieIdSchema }, 'params'), async function (req, res, next) {
+    const { movieId } = req.params
 
-  //   try {
-  //     const deletedMovieId = await moviesService.deleteMovie({ movieId })
+    try {
+      const deletedMovieId = await moviesService.deleteMovie({ movieId })
 
-  //     res.status(200).json({
-  //       data: deletedMovieId,
-  //       message: 'movie deleted'
-  //     })
-  //   } catch (err) {
-  //     next(err)
-  //   }
-  // })
+      res.status(200).json({
+        data: deletedMovieId,
+        message: 'movie deleted'
+      })
+    } catch (err) {
+      next(err)
+    }
+  })
 
   // // PATCH Actualizar datos en un recurso específico.
   // router.patch('/:movieId', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['update:movies']), validationHandler({ movieId: movieIdSchema }, 'params'),
