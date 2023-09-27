@@ -111,21 +111,21 @@ export function moviesApi (app: Express): void {
     }
   })
 
-  // // PATCH Actualizar datos en un recurso específico.
   // router.patch('/:movieId', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['update:movies']), validationHandler({ movieId: movieIdSchema }, 'params'),
-  //   validationHandler(updateMovieSchema), async function (req, res, next) {
-  //     const { movieId } = req.params
-  //     const { body: movie } = req
+  router.patch('/:movieId', validationHandler({ movieId: movieIdSchema }, 'params'),
+    validationHandler(updateMovieSchema), async function (req, res, next) {
+      const { movieId } = req.params
+      const { body: movie } = req
 
-  //     try {
-  //       const updateMovieId = await moviesService.patchMovie({ movieId, movie })
+      try {
+        const updateMovieId = await moviesService.patchMovie({ movieId, movie })
 
-  //       res.status(200).json({
-  //         data: updateMovieId,
-  //         message: 'movie modified'
-  //       })
-  //     } catch (err) {
-  //       next(err)
-  //     }
-  //   })
+        res.status(200).json({
+          data: updateMovieId,
+          message: 'movie modified'
+        })
+      } catch (err) {
+        next(err)
+      }
+    })
 }
