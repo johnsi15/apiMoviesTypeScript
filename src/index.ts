@@ -1,5 +1,6 @@
 import express from 'express'
 import helmet from 'helmet'
+import cors from 'cors'
 
 import { config } from './config/index'
 import { moviesApi } from './routes/movies'
@@ -8,11 +9,21 @@ import { moviesApi } from './routes/movies'
 import { wrapErrors, logErrors, clientErrorHandler } from './utils/middleware/errorHandlers'
 import { notFoundHandler } from './utils/middleware/notFoundHandler'
 const app = express()
+
+// On PORT
 const port = config.port
 
-// body-parser
+const corsOptions = {
+  origin: ['http://localhost', 'http://127.0.0.1:5500'],
+  methods: ['GET', 'POST', 'PUT'] // 'DELETE','UPDATE','PUT','PATCH'
+}
+
+// Middlewares
 app.use(express.json())
 app.use(helmet())
+app.use(cors(corsOptions))
+
+app.disable('x-powered-by')
 
 // Routes
 // authApi(app)

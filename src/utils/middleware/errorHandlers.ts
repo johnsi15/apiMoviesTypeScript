@@ -22,7 +22,7 @@ export function withErrorStack (err: Error, stack: string | undefined): Error {
 export function logErrors (err: Error, _req: Request, _res: Response, next: NextFunction): void {
   // Sentry.captureException(err)
   logger(err.stack)
-  console.log({ stackError: err.stack })
+  // console.log({ stackError: err.stack })
   next(err)
 }
 
@@ -45,8 +45,6 @@ export function clientErrorHandler (err: BoomType, req: Request, res: Response, 
   adaptedError.stack = err.stack
 
   // catch errors for AJAX request or if an error ocurrs while streaming
-  console.log({ isRequest: isRequestAjaxOrApi(req) })
-  console.log({ resHeader: res.headersSent })
   if (isRequestAjaxOrApi(req) || res.headersSent) {
     res.status(statusCode).json(withErrorStack(adaptedError, err.stack))
   } else {
