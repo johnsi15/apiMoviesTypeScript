@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import passport from 'passport'
 import { Strategy, ExtractJwt } from 'passport-jwt'
 import boom from '@hapi/boom'
@@ -11,7 +12,7 @@ passport.use(
       secretOrKey: config.authJwtSecret,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
     },
-    async function (tokenPayload, cb) {
+    async function (tokenPayload, cb): Promise<void> {
       const usersService = new UsersService()
       console.log({ tokenPayload })
 
@@ -19,14 +20,14 @@ passport.use(
         const user = await usersService.getUser({ email: tokenPayload.email })
 
         if (user == null) {
-          return cb(boom.unauthorized(), false)
+          cb(boom.unauthorized(), false); return
         }
 
         delete user.password
 
         cb(null, { ...user, scopes: tokenPayload.scopes })
       } catch (error) {
-        return cb(error)
+        cb(error)
       }
     }
   )

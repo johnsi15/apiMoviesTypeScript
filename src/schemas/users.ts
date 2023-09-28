@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { type UserPartial } from '../types'
+// import { type UserPartial } from '../types'
 
 export const userIdSchema = Joi.string().regex(/^[0-9a-fA-F]{24}$/)
 
@@ -9,7 +9,7 @@ const userSchema = {
   password: Joi.string().required()
 }
 
-export const createUserSchema: UserPartial = {
+export const createUserSchema = {
   ...userSchema,
   isAdmin: Joi.boolean()
 }

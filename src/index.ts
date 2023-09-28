@@ -5,7 +5,7 @@ import cors from 'cors'
 import { config } from './config/index'
 import { moviesApi } from './routes/movies'
 // import userMoviesApi from './routes/userMovies'
-// import authApi from './routes/auth'
+import { authApi } from './routes/auth'
 import { wrapErrors, logErrors, clientErrorHandler } from './utils/middleware/errorHandlers'
 import { notFoundHandler } from './utils/middleware/notFoundHandler'
 const app = express()
@@ -26,7 +26,7 @@ app.use(cors(corsOptions))
 app.disable('x-powered-by')
 
 // Routes
-// authApi(app)
+authApi(app)
 moviesApi(app)
 // userMoviesApi(app)
 

@@ -61,7 +61,6 @@ export function moviesApi (app: Express): void {
   //   validationHandler(createMovieSchema), async function (req, res, next) {
   router.post('/', validationHandler(createMovieSchema), async function (req, res, next) {
     const { body: movie } = req
-    console.log({ movie })
 
     try {
       const createdMovieId = await moviesService.createMovie({ movie })

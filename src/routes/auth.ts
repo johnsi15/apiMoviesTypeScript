@@ -27,24 +27,25 @@ export function authApi (app: Express): void {
     const { apiKeyToken } = req.body
 
     if (apiKeyToken == null) {
-      next(boom.unauthorized('apiKeyToken is required'))
+      next(boom.unauthorized('apiKeyToken is required')); return
     }
 
     passport.authenticate('basic', function (error: Error | null, user: UserPartial) {
       try {
         if (error != null || user === undefined) {
-          next(boom.unauthorized())
+          next(boom.unauthorized()); return
         }
 
-        req.login(user, { session: false }, async function (error: Error) {
-          if (error != null) {
-            next(error)
+        req.login(user, { session: false }, async function (loginError: Error) {
+          if (loginError != null) {
+            next(loginError); return
           }
 
           const apiKey = await apiKeysService.getApiKey({ token: apiKeyToken })
 
           if (apiKey == null) {
-            next(boom.unauthorized())
+            console.log({ apiKey })
+            next(boom.unauthorized()); return
           }
 
           const { _id: id, name, email } = user
@@ -60,7 +61,7 @@ export function authApi (app: Express): void {
             expiresIn: '15m'
           })
 
-          return res.status(200).json({ token, user: { id, name, email } })
+          res.status(200).json({ token, user: { id, name, email } })
         })
       } catch (error) {
         next(error)
@@ -89,7 +90,7 @@ export function authApi (app: Express): void {
     const { apiKeyToken, ...user } = body
 
     if (apiKeyToken == null) {
-      next(boom.unauthorized('apiKeyToken is required'))
+      next(boom.unauthorized('apiKeyToken is required')); return
     }
 
     try {
@@ -97,7 +98,7 @@ export function authApi (app: Express): void {
       const apiKey = await apiKeysService.getApiKey({ token: apiKeyToken })
 
       if (apiKey == null) {
-        next(boom.unauthorized())
+        next(boom.unauthorized()); return
       }
 
       if (queriedUser == null) {
