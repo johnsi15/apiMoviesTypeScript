@@ -31,8 +31,8 @@ export class UsersService {
     return createUserId
   }
 
-  async getOrCreateUser ({ user }: { user: User }): Promise<WithId<Document> | null> {
-    const queriedUser = await this.getUser({ email: user.email })
+  async getOrCreateUser ({ user }: { user: User }): Promise<User | null> {
+    const queriedUser = await this.getUser({ email: user.email }) as User | null
     console.log({ queriedUser })
 
     if (queriedUser != null) {
@@ -41,7 +41,7 @@ export class UsersService {
 
     await this.createUser({ user })
 
-    const newUser = await this.getUser({ email: user.email })
+    const newUser = await this.getUser({ email: user.email }) as User | null
     return newUser
   }
 }
