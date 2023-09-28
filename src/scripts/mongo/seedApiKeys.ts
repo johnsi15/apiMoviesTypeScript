@@ -62,5 +62,6 @@ async function seedApiKeys (): Promise<void> {
 }
 
 seedApiKeys().catch(err => {
-  console.log(`Error seedApiKeys ${err}`)
+  logger(chalk.red(`Error seedApiKeys ${err}`))
+  process.exit(1)
 })

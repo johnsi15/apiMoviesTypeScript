@@ -1,9 +1,9 @@
 // DEBUG=app:* npx ts-node ./src/scripts/mongo/seedMovies.ts
 
 import chalk from 'chalk'
+import { debug } from 'debug'
 import { MongoLib } from '../../lib/mongo'
 import { moviesMock } from '../../utils/mocks/movies'
-import { debug } from 'debug'
 
 const logger = debug('app:scripts:movies')
 
@@ -26,4 +26,6 @@ async function seedMovies (): Promise<void> {
 
 seedMovies().catch(err => {
   console.log(`Error seedMovies ${err}`)
+  logger(chalk.red(err))
+  process.exit(1)
 })

@@ -16,7 +16,7 @@ export type MoviePartial = Joi.PartialSchemaMap<Movie>
 export interface User {
   name: string
   email: string
-  password: string
+  password: string | Buffer
 }
 
 export interface UserPartial extends User {

@@ -9,9 +9,9 @@ export const config = {
   dbHost: process.env.DB_HOST,
   dbName: process.env.DB_NAME,
   dbPort: process.env.DB_PORT ?? '',
-  authJwtSecret: process.env.AUTH_JWT_SECRET ?? '',
-  defaultAdminPassword: process.env.DEFAULT_ADMIN_PASSWORD,
-  defaultUserPassword: process.env.DEFAULT_USER_PASSWORD,
+  authJwtSecret: process.env.AUTH_JWT_SECRET ?? 'jwt_secret',
+  defaultAdminPassword: process.env.DEFAULT_ADMIN_PASSWORD ?? 'admin_password',
+  defaultUserPassword: process.env.DEFAULT_USER_PASSWORD ?? 'password',
   publicApiKeyToken: process.env.PUBLIC_API_KEY_TOKEN,
   adminApiKeyToken: process.env.ADMIN_API_KEY_TOKEN
 }
