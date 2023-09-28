@@ -16,7 +16,9 @@ export class MoviesService {
     let query = {}
 
     if (Array.isArray(tags)) {
-      query = { tags: { $in: tags } }
+      const regexTags = tags.map(tag => new RegExp(tag, 'i'))
+
+      query = { tags: { $in: regexTags } }
     } else if (typeof tags === 'string') {
       query = { tags: { $elemMatch: { $regex: tags, $options: 'i' } } }
     }
