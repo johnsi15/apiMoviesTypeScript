@@ -1,4 +1,4 @@
-import { type StringSchema, type BooleanSchema } from 'joi'
+import type Joi from 'joi'
 
 export interface Movie {
   title: string
@@ -14,15 +14,15 @@ export interface Movie {
 export type MoviePartial = Joi.PartialSchemaMap<Movie>
 
 export interface User {
+  _id?: string | undefined
   name: string
   email: string
   password: string | Buffer
+  isAdmin?: boolean | undefined
+  apiKeyToken?: string | undefined
 }
 
-export interface UserPartial extends User {
-  _id?: string | undefined | StringSchema
-  isAdmin?: boolean | undefined | BooleanSchema
-}
+export type UserPartial = Joi.PartialSchemaMap<User>
 
 export interface Query {
   tags?: string | null

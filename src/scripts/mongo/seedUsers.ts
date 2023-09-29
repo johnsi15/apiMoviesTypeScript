@@ -5,12 +5,12 @@ import chalk from 'chalk'
 import { debug } from 'debug'
 import { MongoLib } from '../../lib/mongo'
 import { config } from '../../config/index'
-import { type UserPartial } from '../../types'
+import { type User } from '../../types'
 import { type ObjectId } from 'mongodb'
 
 const logger = debug('app:scripts:users')
 
-const users: UserPartial[] = [
+const users: User[] = [
   {
     email: 'root@johnserrano.co',
     name: 'ROOT',
@@ -29,7 +29,7 @@ const users: UserPartial[] = [
   }
 ]
 
-async function createUser (mongoDB: MongoLib, user: UserPartial): Promise<ObjectId | undefined> {
+async function createUser (mongoDB: MongoLib, user: User): Promise<ObjectId | undefined> {
   const { name, email, password, isAdmin } = user
   const hashedPassword = await bcrypt.hash(password, 10)
 

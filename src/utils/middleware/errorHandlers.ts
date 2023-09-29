@@ -28,7 +28,7 @@ export function logErrors (err: Error, _req: Request, _res: Response, next: Next
 
 export function wrapErrors (err: BoomType, _req: Request, _res: Response, next: NextFunction): void {
   if (!err.isBoom) {
-    next(Boom.badImplementation(err))
+    next(Boom.badImplementation(err)); return
   }
 
   next(err)

@@ -1,9 +1,8 @@
 import Joi from 'joi'
 import Boom from '@hapi/boom'
 import type { Request, Response, NextFunction } from 'express'
-import { type MoviePartial } from '../../types'
 
-function validate (data: MoviePartial, schema: MoviePartial): Joi.ValidationError | undefined {
+function validate<Tdata> (data: Tdata, schema: Joi.Schema): Joi.ValidationError | undefined {
   // const { error } = schema.validate(data)
   const { error } = Joi
     .object(schema)
@@ -11,7 +10,7 @@ function validate (data: MoviePartial, schema: MoviePartial): Joi.ValidationErro
   return error
 }
 
-export function validationHandler (schema: MoviePartial, check = 'body') {
+export function validationHandler (schema: Joi.Schema, check = 'body') {
   // console.log({ schema })
   return function (req: Request, _res: Response, next: NextFunction) {
     // console.log({ check })
