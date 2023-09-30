@@ -1,13 +1,11 @@
-import Joi from 'joi'
+import type Joi from 'joi'
 import Boom from '@hapi/boom'
 import type { Request, Response, NextFunction } from 'express'
 import { type ValidationData } from '../../types'
 
 function validate<Tdata> (data: Tdata, schema: Joi.Schema): Joi.ValidationError | undefined {
-  // const { error } = schema.validate(data)
-  const { error } = Joi
-    .object(schema)
-    .validate(data)
+  // const { error } = Joi.object(schema).validate(data)
+  const { error } = schema.validate(data)
   return error
 }
 

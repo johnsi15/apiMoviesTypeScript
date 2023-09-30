@@ -14,7 +14,7 @@ export class MongoLib {
   private readonly dbName: string | undefined
   private static connection: Db | Error | null = null
 
-  constructor () {
+  constructor () { // puede ser interesante convertirala en singleton
     this.client = new MongoClient(MONGO_URI, {
       serverApi: {
         version: ServerApiVersion.v1,

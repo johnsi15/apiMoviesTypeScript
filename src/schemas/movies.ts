@@ -14,7 +14,7 @@ const commonRules = {
 export const movieIdSchema = Joi.object({ movieId: Joi.string().regex(/^[0-9a-fA-F]{24}$/) })
 
 export const createMovieSchema = Joi.object({
-  ...commonRules,
+  // ...commonRules,
   title: commonRules.title.required(),
   year: commonRules.year.required(),
   cover: commonRules.cover.required(),

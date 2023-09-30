@@ -2,18 +2,16 @@ import Joi from 'joi'
 
 export const userIdSchema = Joi.object({ userId: Joi.string().regex(/^[0-9a-fA-F]{24}$/) })
 
-const userSchema = {
+const userSchema = Joi.object({
   name: Joi.string().max(100).required(),
   email: Joi.string().email().required(),
   password: Joi.string().required()
-}
+})
 
-export const createUserSchema = Joi.object({
-  ...userSchema,
+export const createUserSchema = userSchema.keys({
   isAdmin: Joi.boolean()
 })
 
-export const createProviderUserSchema = Joi.object({
-  ...userSchema,
+export const createProviderUserSchema = userSchema.keys({
   apiKeyToken: Joi.string().required()
 })
