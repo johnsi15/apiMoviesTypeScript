@@ -59,11 +59,23 @@ export function moviesApi (app: Express): void {
   // router.post('/', passport.authenticate('jwt', { session: false }),
   //   scopesValidationHandler(['create:movies']),
   //   validationHandler(createMovieSchema), async function (req, res, next) {
-  router.post('/', validationHandler(createMovieSchema), async function (req, res, next) {
-    const { body: movie } = req
+  router.post('/', validationHandler(createMovieSchema), async function (_req, res, next) {
+    // const { body: movie } = req
+    const movie = res.locals.data
+
+    const cleanMovieData = {
+      title: movie.title,
+      year: movie.year,
+      cover: movie.cover,
+      description: movie.description,
+      duration: movie.duration,
+      contentRating: movie.contentRating,
+      source: movie.source,
+      ...(movie.tags != null && { tags: movie.tags })
+    }
 
     try {
-      const createdMovieId = await moviesService.createMovie({ movie })
+      const createdMovieId = await moviesService.createMovie({ movie: cleanMovieData })
 
       res.status(201).json({
         data: createdMovieId,

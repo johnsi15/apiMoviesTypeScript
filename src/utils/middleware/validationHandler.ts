@@ -3,28 +3,30 @@ import Boom from '@hapi/boom'
 import type { Request, Response, NextFunction } from 'express'
 import { type ValidationData } from '../../types'
 
-function validate<Tdata> (data: Tdata, schema: Joi.Schema): Joi.ValidationError | undefined {
+function validate<Tdata> (data: Tdata, schema: Joi.Schema): { error: Joi.ValidationError | undefined, value: Tdata | undefined } {
   // const { error } = Joi.object(schema).validate(data)
-  const { error } = schema.validate(data)
-  return error
+  const { error, value } = schema.validate(data)
+
+  return { error, value }
 }
 
 export function validationHandler (schema: Joi.Schema, check = 'body') {
   // console.log({ schema })
-  return function (req: Request, _res: Response, next: NextFunction) {
+  return function (req: Request, res: Response, next: NextFunction) {
     // console.log({ check })
-    let error: Joi.ValidationError | undefined
+    let validateResponse: { error: Joi.ValidationError | undefined, value: ValidationData | undefined }
 
     if (check !== 'body') {
-      error = validate<ValidationData>(req.params, schema)
+      validateResponse = validate<ValidationData>(req.params, schema)
     } else {
-      error = validate<ValidationData>(req.body, schema)
+      validateResponse = validate<ValidationData>(req.body, schema)
     }
 
     // error ? next(Boom.badRequest(error)) : next()
-    if (error !== undefined) {
-      next(Boom.badRequest(error))
+    if (validateResponse.error !== undefined) {
+      next(Boom.badRequest(validateResponse.error))
     } else {
+      res.locals.data = validateResponse.value
       next()
     }
   }

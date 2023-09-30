@@ -33,7 +33,6 @@ export class UsersService {
 
   async getOrCreateUser ({ user }: { user: User }): Promise<WithId<Document> | null> {
     const queriedUser = await this.getUser({ email: user.email })
-    console.log({ queriedUser })
 
     if (queriedUser != null) {
       return queriedUser
