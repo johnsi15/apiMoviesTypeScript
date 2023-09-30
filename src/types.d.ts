@@ -29,3 +29,5 @@ export interface Query {
   email?: string
   token?: string
 }
+
+export type ValidationData = Partial<User & Movie>

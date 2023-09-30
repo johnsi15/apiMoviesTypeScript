@@ -1,6 +1,7 @@
 import Joi from 'joi'
 import Boom from '@hapi/boom'
 import type { Request, Response, NextFunction } from 'express'
+import { type ValidationData } from '../../types'
 
 function validate<Tdata> (data: Tdata, schema: Joi.Schema): Joi.ValidationError | undefined {
   // const { error } = schema.validate(data)
@@ -17,9 +18,9 @@ export function validationHandler (schema: Joi.Schema, check = 'body') {
     let error: Joi.ValidationError | undefined
 
     if (check !== 'body') {
-      error = validate(req.params, schema)
+      error = validate<ValidationData>(req.params, schema)
     } else {
-      error = validate(req.body, schema)
+      error = validate<ValidationData>(req.body, schema)
     }
 
     // error ? next(Boom.badRequest(error)) : next()
