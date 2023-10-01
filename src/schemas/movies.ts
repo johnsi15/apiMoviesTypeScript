@@ -24,7 +24,7 @@ export const createMovieSchema = Joi.object({
   contentRating: commonRules.contentRating,
   source: commonRules.source.required(),
   tags: commonRules.tags
-}).unknown(true)
+})
 
 export const updateMovieSchema = Joi.object({
   ...commonRules

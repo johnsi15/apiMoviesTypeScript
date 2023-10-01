@@ -5,7 +5,7 @@ import { type ValidationData } from '../../types'
 
 function validate<Tdata> (data: Tdata, schema: Joi.Schema): { error: Joi.ValidationError | undefined, value: Tdata | undefined } {
   // const { error } = Joi.object(schema).validate(data)
-  const { error, value } = schema.validate(data)
+  const { error, value } = schema.validate(data, { stripUnknown: true })
 
   return { error, value }
 }
