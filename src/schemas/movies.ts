@@ -27,5 +27,6 @@ export const createMovieSchema = Joi.object({
 })
 
 export const updateMovieSchema = Joi.object({
-  ...commonRules
+  ...commonRules,
+  contentRating: Joi.string().max(5) // porque necesitamos evitar el default('1')
 })

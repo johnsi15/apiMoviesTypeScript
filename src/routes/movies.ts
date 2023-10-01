@@ -81,7 +81,8 @@ export function moviesApi (app: Express): void {
   router.put('/:movieId', validationHandler(movieIdSchema, 'params'),
     validationHandler(updateMovieSchema), async function (req, res, next) {
       const { movieId } = req.params
-      const { body: movie } = req
+      // const { body: movie } = req
+      const movie = res.locals.data
 
       try {
         const updateMovieId = await moviesService.updateMovie({ movieId, movie })
@@ -115,7 +116,8 @@ export function moviesApi (app: Express): void {
   router.patch('/:movieId', validationHandler(movieIdSchema, 'params'),
     validationHandler(updateMovieSchema), async function (req, res, next) {
       const { movieId } = req.params
-      const { body: movie } = req
+      // const { body: movie } = req
+      const movie = res.locals.data
 
       try {
         const updateMovieId = await moviesService.patchMovie({ movieId, movie })
