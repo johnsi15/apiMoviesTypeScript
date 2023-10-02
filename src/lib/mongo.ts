@@ -75,7 +75,7 @@ export class MongoLib {
       }).then(result => result?.insertedId)
   }
 
-  async update (collection: string, id: string, data: Document | string): Promise<string | ObjectId> {
+  async update (collection: string, id: string, data: Document): Promise<string | ObjectId> {
     return await this.connect()
       .then(async db => {
         if (db instanceof Error || db == null) {
@@ -86,7 +86,7 @@ export class MongoLib {
 
         return await db
           .collection(collection)
-          .updateOne({ _id: objectId }, { $set: data }, { upsert: true })
+          .updateOne({ _id: objectId }, { $set: { ...data, updatedAt: new Date() } }, { upsert: true })
       }).then(result => result?.upsertedId ?? id)
   }
 

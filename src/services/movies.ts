@@ -39,7 +39,7 @@ export class MoviesService {
     return createMovieId
   }
 
-  async updateMovie ({ movieId, movie }: { movieId: string, movie: Document | string } = { movieId: '', movie: '' }): Promise<string | ObjectId> {
+  async updateMovie ({ movieId, movie }: { movieId: string, movie: Document } = { movieId: '', movie: {} }): Promise<string | ObjectId> {
     // validate si pasan un moviId vacio y un movie ??¿¿
     const updatedMovieId = await this.mongoDB.update(this.collection, movieId, movie)
     return updatedMovieId
@@ -50,7 +50,7 @@ export class MoviesService {
     return deletedMovieId
   }
 
-  async patchMovie ({ movieId, movie }: { movieId: string, movie: Document | string } = { movieId: '', movie: '' }): Promise<string | ObjectId> {
+  async patchMovie ({ movieId, movie }: { movieId: string, movie: Document } = { movieId: '', movie: {} }): Promise<string | ObjectId> {
     const patchMovieId = await this.mongoDB.update(this.collection, movieId, movie)
     return patchMovieId
   }

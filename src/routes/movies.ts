@@ -69,29 +69,24 @@ export function moviesApi (app: Express): void {
     }
   })
 
-  // router.put('/:movieId', passport.authenticate('jwt', { session: false }),
-  //   scopesValidationHandler(['update:movies']), validationHandler({ movieId: movieIdSchema }, 'params'),
-  //   validationHandler(updateMovieSchema), async function (req, res, next) {
-  router.put('/:movieId', validationHandler(movieIdSchema, 'params'),
-    validationHandler(updateMovieSchema), async function (req, res, next) {
-      const { movieId } = req.params
-      // const { body: movie } = req
-      const movie = res.locals.data
+  router.put('/:movieId', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['update:movies']), validationHandler(movieIdSchema, 'params'), validationHandler(updateMovieSchema), async function (req, res, next) {
+    const { movieId } = req.params
+    // const { body: movie } = req
+    const movie = res.locals.data
 
-      try {
-        const updateMovieId = await moviesService.updateMovie({ movieId, movie })
+    try {
+      const updateMovieId = await moviesService.updateMovie({ movieId, movie })
 
-        res.status(200).json({
-          data: updateMovieId,
-          message: 'movie update'
-        })
-      } catch (err) {
-        next(err)
-      }
-    })
+      res.status(200).json({
+        data: updateMovieId,
+        message: 'movie update'
+      })
+    } catch (err) {
+      next(err)
+    }
+  })
 
-  // router.delete('/:movieId', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['delete:movies']), validationHandler({ movieId: movieIdSchema }, 'params'), async function (req, res, next) {
-  router.delete('/:movieId', validationHandler(movieIdSchema, 'params'), async function (req, res, next) {
+  router.delete('/:movieId', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['delete:movies']), validationHandler(movieIdSchema, 'params'), async function (req, res, next) {
     const { movieId } = req.params
 
     try {
@@ -106,22 +101,20 @@ export function moviesApi (app: Express): void {
     }
   })
 
-  // router.patch('/:movieId', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['update:movies']), validationHandler({ movieId: movieIdSchema }, 'params'),
-  router.patch('/:movieId', validationHandler(movieIdSchema, 'params'),
-    validationHandler(updateMovieSchema), async function (req, res, next) {
-      const { movieId } = req.params
-      // const { body: movie } = req
-      const movie = res.locals.data
+  router.patch('/:movieId', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['update:movies']), validationHandler(movieIdSchema, 'params'), validationHandler(updateMovieSchema), async function (req, res, next) {
+    const { movieId } = req.params
+    // const { body: movie } = req
+    const movie = res.locals.data
 
-      try {
-        const updateMovieId = await moviesService.patchMovie({ movieId, movie })
+    try {
+      const updateMovieId = await moviesService.patchMovie({ movieId, movie })
 
-        res.status(200).json({
-          data: updateMovieId,
-          message: 'movie modified'
-        })
-      } catch (err) {
-        next(err)
-      }
-    })
+      res.status(200).json({
+        data: updateMovieId,
+        message: 'movie modified'
+      })
+    } catch (err) {
+      next(err)
+    }
+  })
 }
