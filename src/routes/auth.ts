@@ -4,7 +4,7 @@ import passport from 'passport'
 import boom from '@hapi/boom'
 import jwt from 'jsonwebtoken'
 import type { Express, Request, Response, NextFunction } from 'express'
-import type { UserPartial } from '../types'
+import type { User } from '../types'
 import { ApiKeysService } from '../services/apiKeys'
 import { UsersService } from '../services/users'
 import { validationHandler } from '../utils/middleware/validationHandler'
@@ -30,7 +30,7 @@ export function authApi (app: Express): void {
       next(boom.unauthorized('apiKeyToken is required')); return
     }
 
-    passport.authenticate('basic', function (error: Error | null, user: UserPartial) {
+    passport.authenticate('basic', function (error: Error | null, user: User) {
       try {
         if (error != null || user === undefined) {
           next(boom.unauthorized()); return
