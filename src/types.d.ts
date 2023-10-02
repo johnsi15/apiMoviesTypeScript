@@ -10,6 +10,7 @@ export interface Movie {
 }
 
 export interface User {
+  _id?: string | undefined
   name: string
   email: string
   password: string | Buffer

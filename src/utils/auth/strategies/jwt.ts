@@ -15,7 +15,7 @@ passport.use(
     },
     async function (tokenPayload, cb): Promise<void> {
       const usersService = new UsersService()
-      console.log({ tokenPayload })
+      // console.log({ tokenPayload })
 
       try {
         const user = await usersService.getUser({ email: tokenPayload.email })

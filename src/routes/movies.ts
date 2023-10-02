@@ -20,7 +20,6 @@ export function moviesApi (app: Express): void {
 
   const moviesService = new MoviesService()
 
-  // router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:movies']), async function (req, res, next) {
   router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:movies']), async function (req, res, next) {
     // cacheResponse(res, FIVE_MINUTES_IN_SECONDS)
     const { tags } = req.query as { tags: string[] | string }
@@ -37,9 +36,7 @@ export function moviesApi (app: Express): void {
     }
   })
 
-  // router.get('/:movieId', passport.authenticate('jwt', { session: false }),
-  //   scopesValidationHandler(['read:movies']), validationHandler({ movieId: movieIdSchema }, 'params'), async function (req, res, next) {
-  router.get('/:movieId', async function (req, res, next) {
+  router.get('/:movieId', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:movies']), validationHandler(movieIdSchema, 'params'), async function (req, res, next) {
     // cacheResponse(res, SIXTY_MINUTES_IN_SECONDS)
 
     const { movieId } = req.params
@@ -56,10 +53,7 @@ export function moviesApi (app: Express): void {
     }
   })
 
-  // router.post('/', passport.authenticate('jwt', { session: false }),
-  //   scopesValidationHandler(['create:movies']),
-  //   validationHandler(createMovieSchema), async function (req, res, next) {
-  router.post('/', validationHandler(createMovieSchema), async function (_req, res, next) {
+  router.post('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['create:movies']), validationHandler(createMovieSchema), async function (_req, res, next) {
     // const { body: movie } = req
     const movie = res.locals.data
 

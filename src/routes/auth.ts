@@ -44,7 +44,7 @@ export function authApi (app: Express): void {
           const apiKey = await apiKeysService.getApiKey({ token: apiKeyToken })
 
           if (apiKey == null) {
-            console.log({ apiKey })
+            // console.log({ apiKey })
             next(boom.unauthorized()); return
           }
 
