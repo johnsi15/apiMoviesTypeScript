@@ -20,7 +20,10 @@ export interface User {
   password: string | Buffer
   isAdmin?: boolean | undefined
   apiKeyToken?: string | undefined
+  scopes?: string[] | undefined
 }
+
+export interface UserPassport extends Omit<User, 'password'> {}
 
 export type UserPartial = Joi.PartialSchemaMap<User>
 
@@ -31,3 +34,11 @@ export interface Query {
 }
 
 export type ValidationData = Partial<User & Movie>
+
+// type ProductUser = User & { profile: Profile };
+
+declare global {
+  namespace Express {
+    interface User extends UserPartial {}
+  }
+}

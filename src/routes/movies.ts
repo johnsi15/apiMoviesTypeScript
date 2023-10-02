@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express'
 import type { Express } from 'express'
-// import passport from 'passport'
+import passport from 'passport'
 import { MoviesService } from '../services/movies'
 
 import { createMovieSchema, movieIdSchema, updateMovieSchema } from '../schemas/movies'
 import { validationHandler } from '../utils/middleware/validationHandler'
-// import scopesValidationHandler from '../utils/middleware/scopesValidation'
+import { scopesValidationHandler } from '../utils/middleware/scopesValidation'
 
 // import cacheResponse from '../utils/cacheReponse'
 // import { FIVE_MINUTES_IN_SECONDS, SIXTY_MINUTES_IN_SECONDS } from '../utils/time'
 
 // JWT strategy
-// require('../utils/auth/strategies/jwt')
+import '../utils/auth/strategies/jwt'
 
 export function moviesApi (app: Express): void {
   const router = express.Router()
@@ -21,7 +21,7 @@ export function moviesApi (app: Express): void {
   const moviesService = new MoviesService()
 
   // router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:movies']), async function (req, res, next) {
-  router.get('/', async function (req, res, next) {
+  router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:movies']), async function (req, res, next) {
     // cacheResponse(res, FIVE_MINUTES_IN_SECONDS)
     const { tags } = req.query as { tags: string[] | string }
 

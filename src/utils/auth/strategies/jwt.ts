@@ -5,6 +5,7 @@ import boom from '@hapi/boom'
 
 import { UsersService } from '../../../services/users'
 import { config } from '../../../config'
+// import { type UserPassport } from '../../../types'
 
 passport.use(
   new Strategy(

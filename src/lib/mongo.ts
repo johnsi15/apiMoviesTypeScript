@@ -71,7 +71,7 @@ export class MongoLib {
           return null
         }
         return await db
-          .collection(collection).insertOne(data)
+          .collection(collection).insertOne({ ...data, createdAt: new Date() })
       }).then(result => result?.insertedId)
   }
 
