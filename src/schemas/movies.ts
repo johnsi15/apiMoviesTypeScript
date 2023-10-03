@@ -12,7 +12,8 @@ const commonRules = {
   // tags: Joi.array().items(Joi.string().valid('Terror', 'Drama', 'Acción', 'Aventura', 'Comedia', 'Romance', 'Misterio'))
 }
 
-export const movieIdSchema = Joi.object({ movieId: Joi.string().regex(/^[0-9a-fA-F]{24}$/) })
+export const movieId = Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+export const movieIdSchema = Joi.object({ movieId })
 
 export const createMovieSchema = Joi.object({
   // ...commonRules,

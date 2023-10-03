@@ -8,8 +8,8 @@ import { validationHandler } from '../utils/middleware/validationHandler'
 import { scopesValidationHandler } from '../utils/middleware/scopesValidation'
 
 import { movieIdSchema } from '../schemas/movies'
-import { userIdSchema } from '../schemas/users'
-import { createUserMovieSchema } from '../schemas/userMovies'
+// import { userIdSchema } from '../schemas/users'
+import { createUserMovieSchema, userMovieIdSchema } from '../schemas/userMovies'
 
 // JWT strategy
 require('../utils/auth/strategies/jwt')
@@ -20,7 +20,7 @@ export function userMoviesApi (app: Express): void {
 
   const userMoviesService = new UserMoviesService()
 
-  router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:user-movies']), validationHandler(userIdSchema, 'query'), async function (req, res, next) {
+  router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:user-movies']), validationHandler(userMovieIdSchema, 'query'), async function (req, res, next) {
     const { userId } = req.query as { userId: string }
 
     try {
@@ -36,13 +36,12 @@ export function userMoviesApi (app: Express): void {
   }
   )
 
-  router.post('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['create:user-movies']), validationHandler(createUserMovieSchema), async function (req, res, next) {
-    const { body: userMovie } = req
+  router.post('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['create:user-movies']), validationHandler(createUserMovieSchema), async function (_req, res, next) {
+    // const { body: userMovie } = req
+    const userMovie = res.locals.data
 
     try {
-      const createdUserMovieId = await userMoviesService.createUserMovie({
-        userMovie
-      })
+      const createdUserMovieId = await userMoviesService.createUserMovie({ userMovie })
 
       res.status(201).json({
         data: createdUserMovieId,
@@ -57,9 +56,7 @@ export function userMoviesApi (app: Express): void {
     const { userMovieId } = req.params
 
     try {
-      const deletedUserMovieId = await userMoviesService.deleteUserMovie({
-        userMovieId
-      })
+      const deletedUserMovieId = await userMoviesService.deleteUserMovie({ userMovieId })
 
       res.status(200).json({
         data: deletedUserMovieId,

@@ -1,6 +1,7 @@
 import Joi from 'joi'
 
-export const userIdSchema = Joi.object({ userId: Joi.string().regex(/^[0-9a-fA-F]{24}$/) })
+export const userId = Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+export const userIdSchema = Joi.object({ userId })
 
 const userSchema = Joi.object({
   name: Joi.string().max(100).required(),

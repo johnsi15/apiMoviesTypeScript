@@ -4,7 +4,7 @@ import cors from 'cors'
 
 import { config } from './config/index'
 import { moviesApi } from './routes/movies'
-// import userMoviesApi from './routes/userMovies'
+import { userMoviesApi } from './routes/userMovies'
 import { authApi } from './routes/auth'
 import { wrapErrors, logErrors, clientErrorHandler } from './utils/middleware/errorHandlers'
 import { notFoundHandler } from './utils/middleware/notFoundHandler'
@@ -28,7 +28,7 @@ app.disable('x-powered-by')
 // Routes
 authApi(app)
 moviesApi(app)
-// userMoviesApi(app)
+userMoviesApi(app)
 
 // Catch 404
 app.use(notFoundHandler)
