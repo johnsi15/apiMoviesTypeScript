@@ -8,8 +8,8 @@ import { validationHandler } from '../utils/middleware/validationHandler'
 import { scopesValidationHandler } from '../utils/middleware/scopesValidation'
 
 import { movieIdSchema } from '../schemas/movies'
-// import { userIdSchema } from '../schemas/users'
-import { createUserMovieSchema, userMovieIdSchema } from '../schemas/userMovies'
+import { userIdSchema } from '../schemas/users'
+import { createUserMovieSchema } from '../schemas/userMovies'
 
 // JWT strategy
 require('../utils/auth/strategies/jwt')
@@ -20,7 +20,7 @@ export function userMoviesApi (app: Express): void {
 
   const userMoviesService = new UserMoviesService()
 
-  router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:user-movies']), validationHandler(userMovieIdSchema, 'query'), async function (req, res, next) {
+  router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:user-movies']), validationHandler(userIdSchema, 'query'), async function (req, res, next) {
     const { userId } = req.query as { userId: string }
 
     try {

@@ -11,10 +11,8 @@ function validate<Tdata> (data: Tdata, schema: Joi.Schema): { error: Joi.Validat
 }
 
 export function validationHandler (schema: Joi.Schema, check = 'body') {
-  // console.log({ schema })
   return function (req: Request, res: Response, next: NextFunction) {
-    console.log({ check })
-    // console.log({ schema })
+    // console.log({ check })
     let validateResponse: { error: Joi.ValidationError | undefined, value: ValidationData | undefined }
 
     if (check === 'body') {

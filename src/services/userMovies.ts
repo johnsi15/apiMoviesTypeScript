@@ -23,20 +23,13 @@ export class UserMoviesService {
   }
 
   async createUserMovie ({ userMovie }: { userMovie: Document }): Promise<ObjectId | undefined> {
-    console.log(userMovie)
-    const createdUserMovieId = await this.mongoDB.create(
-      this.collection,
-      userMovie
-    )
+    const createdUserMovieId = await this.mongoDB.create(this.collection, userMovie)
 
     return createdUserMovieId
   }
 
   async deleteUserMovie ({ userMovieId }: { userMovieId: string }): Promise<string> {
-    const deletedUserMovieId = await this.mongoDB.delete(
-      this.collection,
-      userMovieId
-    )
+    const deletedUserMovieId = await this.mongoDB.delete(this.collection, userMovieId)
 
     return deletedUserMovieId
   }
