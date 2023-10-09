@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import express from 'express'
-import type { Express } from 'express'
+import express, { type Express } from 'express'
 import passport from 'passport'
 import { MoviesService } from '../services/movies'
 
@@ -8,7 +7,7 @@ import { createMovieSchema, movieIdSchema, updateMovieSchema } from '../schemas/
 import { validationHandler } from '../utils/middleware/validationHandler'
 import { scopesValidationHandler } from '../utils/middleware/scopesValidation'
 
-import { cacheResponse } from '../utils/cacheReponse'
+import { cacheResponse } from '../utils/cacheResponse'
 import { FIVE_MINUTES_IN_SECONDS, SIXTY_MINUTES_IN_SECONDS } from '../utils/time'
 
 // JWT strategy
