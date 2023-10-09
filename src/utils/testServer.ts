@@ -1,8 +1,10 @@
-// import express from 'express'
-// import supertest from 'supertest'
+import express, { type Express } from 'express'
+import supertest, { type SuperTest, type Test } from 'supertest'
 
-// export function testServer (route) {
-//   const app = express()
-//   route(app)
-//   return supertest(app)
-// }
+export type RouteHandler = (app: Express) => void
+
+export function testServer (route: RouteHandler): SuperTest<Test> {
+  const app = express()
+  route(app)
+  return supertest(app)
+}

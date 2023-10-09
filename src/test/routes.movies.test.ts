@@ -1,47 +1,44 @@
-/*
-  mocha: nos ayuda a correr los test
-  supertest: levanta un servidor temporal
-  sinon: crea mocks para tests
-  proxyquire inyecta los mocks cuando se requieren los paquetes
-*/
+import { type Express } from 'express'
+import { moviesMock, MoviesServiceMock } from '../utils/mocks/movies'
+import { moviesApi } from '../routes/movies'
+import { testServer } from '../utils/testServer'
 
-// import { testServer } from '../utils/testServer'
-// import { moviesMock, MoviesServiceMock } from '../utils/mocks/movies.js'
+jest.mock('../services/movies', () => {
+  return { MoviesService: MoviesServiceMock }
+})
+describe('routes - movies', function () {
+  // const route = proxyquire('../routes/movies.ts', {
+  //   '../services/movies.ts': MoviesServiceMock
+  // })
+  // const request = testServer(route)
+  // const request = testServer(moviesApi)
+  let request: ReturnType<typeof testServer>
 
-// describe('routes - movies', function () {
-//   const route = proxyquire('../routes/movies', {
-//     '../services/movies': MoviesServiceMock
-//   })
+  beforeAll(() => {
+    // Crea una instancia de testServer y configura las rutas en ella
+    request = testServer((app: Express) => {
+      moviesApi(app)
+    })
+  })
 
-//   const request = testServer(route)
+  describe('GET /movies', function () {
+    // test('should respond with status 200', async function () {
+    //   await request.get('/api/movies').set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTE1YjMzNTBiMmNmZGJmZTE2YTU4M2UiLCJuYW1lIjoiUk9PVCIsImVtYWlsIjoicm9vdEBqb2huc2VycmFuby5jbyIsInNjb3BlcyI6WyJzaWduaW46YXV0aCIsInNpZ251cDphdXRoIiwicmVhZDptb3ZpZXMiLCJjcmVhdGU6bW92aWVzIiwidXBkYXRlOm1vdmllcyIsImRlbGV0ZTptb3ZpZXMiLCJyZWFkOnVzZXItbW92aWVzIiwiY3JlYXRlOnVzZXItbW92aWVzIiwiZGVsZXRlOnVzZXItbW92aWVzIl0sImlhdCI6MTY5Njg5MzYwMiwiZXhwIjoxNjk2ODk0NTAyfQ.H8CDIl-nFjrUBCEZrTEnP_cyN7pzXSwfMTyFcu2Ntv4').expect(200)
+    // })
 
-//   describe('GET /movies', function () {
-//     it('should respond with status 200', function (done) {
-//       request.get('/api/movies').expect(200, done)
-//     })
-
-//     it('should respond with the list of movies', function (done) {
-//       request.get('/api/movies').end((err, res) => {
-//         if (err) {
-//           console.log(':( algo salio mal!')
-//           done()
-//         }
-
-//         assert.deepEqual(res.body, {
-//           data: moviesMock,
-//           message: 'movies listed'
-//         })
-
-//         done()
-//       })
-//     })
-//   })
-// })
-
-function sum (a: number, b: number): number {
-  return a + b
-}
-
-test('basic again', () => {
-  expect(sum(1, 2)).toBe(3)
+    test('should respond with the list of movies', async function () {
+      try {
+        const response = await request.get('/api/movies').set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTE1YjMzNTBiMmNmZGJmZTE2YTU4M2UiLCJuYW1lIjoiUk9PVCIsImVtYWlsIjoicm9vdEBqb2huc2VycmFuby5jbyIsInNjb3BlcyI6WyJzaWduaW46YXV0aCIsInNpZ251cDphdXRoIiwicmVhZDptb3ZpZXMiLCJjcmVhdGU6bW92aWVzIiwidXBkYXRlOm1vdmllcyIsImRlbGV0ZTptb3ZpZXMiLCJyZWFkOnVzZXItbW92aWVzIiwiY3JlYXRlOnVzZXItbW92aWVzIiwiZGVsZXRlOnVzZXItbW92aWVzIl0sImlhdCI6MTY5Njg5MzYwMiwiZXhwIjoxNjk2ODk0NTAyfQ.H8CDIl-nFjrUBCEZrTEnP_cyN7pzXSwfMTyFcu2Ntv4')
+        console.log({ body: response.body })
+        console.log({ moviesMock })
+        expect(response.body).toEqual({
+          data: moviesMock,
+          message: 'movies listed'
+        })
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
+  })
 })
