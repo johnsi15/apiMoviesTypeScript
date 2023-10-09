@@ -8,8 +8,8 @@ import { createMovieSchema, movieIdSchema, updateMovieSchema } from '../schemas/
 import { validationHandler } from '../utils/middleware/validationHandler'
 import { scopesValidationHandler } from '../utils/middleware/scopesValidation'
 
-// import cacheResponse from '../utils/cacheReponse'
-// import { FIVE_MINUTES_IN_SECONDS, SIXTY_MINUTES_IN_SECONDS } from '../utils/time'
+import { cacheResponse } from '../utils/cacheReponse'
+import { FIVE_MINUTES_IN_SECONDS, SIXTY_MINUTES_IN_SECONDS } from '../utils/time'
 
 // JWT strategy
 import '../utils/auth/strategies/jwt'
@@ -21,7 +21,7 @@ export function moviesApi (app: Express): void {
   const moviesService = new MoviesService()
 
   router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:movies']), async function (req, res, next) {
-    // cacheResponse(res, FIVE_MINUTES_IN_SECONDS)
+    cacheResponse(res, FIVE_MINUTES_IN_SECONDS)
     const { tags } = req.query as { tags: string[] | string }
 
     try {
@@ -37,7 +37,7 @@ export function moviesApi (app: Express): void {
   })
 
   router.get('/:movieId', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:movies']), validationHandler(movieIdSchema, 'params'), async function (req, res, next) {
-    // cacheResponse(res, SIXTY_MINUTES_IN_SECONDS)
+    cacheResponse(res, SIXTY_MINUTES_IN_SECONDS)
 
     const { movieId } = req.params
 
