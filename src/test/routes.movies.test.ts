@@ -63,5 +63,20 @@ describe('routes - movies', function () {
         throw err
       }
     })
+
+    test('should respond with the list of movies by tags', async function () {
+      try {
+        const [tag1, tag2] = moviesMock[0].tags ?? []
+        const response = await request.get(`/api/movies?tags=${tag1}&tags=${tag2}&tags=drama`).set(headers)
+
+        expect(response.body).toEqual({
+          data: moviesMock,
+          message: 'movies listed'
+        })
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
   })
 })
