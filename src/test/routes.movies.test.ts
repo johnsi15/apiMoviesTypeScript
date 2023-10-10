@@ -18,11 +18,12 @@ describe('routes - movies', function () {
   let headers = {}
 
   beforeAll(async () => {
-    // Crea una instancia de testServer y configura las rutas en ella
+    const authToken = createAuthToken()
+
     request = testServer((app: Express) => {
       moviesApi(app)
     })
-    const authToken = createAuthToken()
+
     headers = {
       Authorization: `Bearer ${authToken}`,
       'X-Requested-With': 'XMLHttpRequest'
@@ -41,6 +42,21 @@ describe('routes - movies', function () {
         expect(response.body).toEqual({
           data: moviesMock,
           message: 'movies listed'
+        })
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
+
+    test('should respond with a recovered movie', async function () {
+      try {
+        const { id } = moviesMock[0]
+        const response = await request.get(`/api/movies/${id}`).set(headers)
+
+        expect(response.body).toEqual({
+          data: moviesMock[0],
+          message: 'movie retrieved'
         })
       } catch (err) {
         console.log(':( algo salió mal!', err)

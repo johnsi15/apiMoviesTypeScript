@@ -1,11 +1,16 @@
 import { faker } from '@faker-js/faker'
 import { type Movie } from '../../types'
 
-const createRandomMovies = (count: number): Movie[] => {
+export interface MovieMock extends Movie {
+  id: string
+}
+
+const createRandomMovies = (count: number): MovieMock[] => {
   const movies = []
   for (let index = 0; index < count; index++) {
     // const element = array[index];
     movies.push({
+      id: faker.database.mongodbObjectId(),
       title: faker.lorem.words(3),
       year: faker.number.int({ max: 2024, min: 1888 }),
       cover: faker.image.urlPicsumPhotos(),
@@ -24,7 +29,7 @@ const createRandomMovies = (count: number): Movie[] => {
   return movies
 }
 
-export const moviesMock: Movie[] = createRandomMovies(10)
+export const moviesMock: MovieMock[] = createRandomMovies(10)
 
 export function filteredMoviesMock (tag: { tags: string[] } | string): Movie[] {
   // { tags: ['Drama'] }
@@ -38,11 +43,15 @@ export function filteredMoviesMock (tag: { tags: string[] } | string): Movie[] {
 }
 
 export class MoviesServiceMock {
-  async getMovies (): Promise<Movie[]> {
+  async getMovies (): Promise<MovieMock[]> {
     return await Promise.resolve(moviesMock)
   }
 
-  async createMovie (): Promise<Movie> {
+  async getMovie (): Promise<MovieMock> {
+    return await Promise.resolve(moviesMock[0])
+  }
+
+  async createMovie (): Promise<MovieMock> {
     return await Promise.resolve(moviesMock[0])
   }
 }
