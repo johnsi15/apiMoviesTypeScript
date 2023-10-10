@@ -78,5 +78,19 @@ describe('routes - movies', function () {
         throw err
       }
     })
+
+    test('should respond with new movie', async function () {
+      try {
+        const response = await request.post('/api/movies').set(headers)
+
+        expect(response.body).toEqual({
+          data: moviesMock[0],
+          message: 'movie created'
+        })
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
   })
 })
