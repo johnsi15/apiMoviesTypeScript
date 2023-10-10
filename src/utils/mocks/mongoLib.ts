@@ -1,21 +1,32 @@
-import sinon from 'sinon'
+import { fakeMovies, filteredMoviesMock } from './movies'
+import { type Movie } from '../../types'
 
-import { moviesMock, filteredMoviesMock } from './movies'
+export const getAllStub = jest.fn()
 
-export const getAllStub = sinon.stub()
-getAllStub.withArgs('movies').resolves(moviesMock)
-
-const tagQuery = { tags: { $in: ['Drama'] } }
-getAllStub.withArgs('movies', tagQuery).resolves(filteredMoviesMock('Drama'))
-
-export const createStub = sinon.stub().resolves(moviesMock[0].id)
-
-export class MongoLibMock {
-  getAll (collection: string, query) {
-    return getAllStub(collection, query)
+getAllStub.mockImplementation(async (collection: string, query: string[]) => {
+  if (collection === 'movies' && query.some(q => q === 'Drama')) {
+    return await Promise.resolve(filteredMoviesMock('Drama'))
+  } else if (collection === 'movies') {
+    return await Promise.resolve(fakeMovies)
   }
 
-  create (collection: string, data) {
-    return createStub(collection, data)
+  return await Promise.resolve([])
+})
+
+export const createStub = jest.fn()
+
+createStub.mockImplementation(async (_collection: string, data: Movie) => {
+  // return await Promise.resolve(fakeMovies[0].id)
+  return await Promise.resolve(data)
+})
+
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class MongoLibMock {
+  static getAll = getAllStub
+  static create = createStub
+
+  static reset (): void {
+    this.getAll.mockReset()
+    this.create.mockReset()
   }
 }

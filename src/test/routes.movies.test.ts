@@ -1,5 +1,5 @@
 import { type Express } from 'express'
-import { moviesMock, MoviesServiceMock } from '../utils/mocks/movies'
+import { fakeMovies, MoviesServiceMock } from '../utils/mocks/movies'
 import { UsersServiceMock } from '../utils/mocks/users'
 import { moviesApi } from '../routes/movies'
 import { testServer } from '../utils/testServer'
@@ -26,7 +26,9 @@ describe('routes - movies', function () {
 
     headers = {
       Authorization: `Bearer ${authToken}`,
-      'X-Requested-With': 'XMLHttpRequest'
+      Accept: 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Content-Type': 'application/json'
     }
   })
 
@@ -40,7 +42,7 @@ describe('routes - movies', function () {
         const response = await request.get('/api/movies').set(headers)
 
         expect(response.body).toEqual({
-          data: moviesMock,
+          data: fakeMovies,
           message: 'movies listed'
         })
       } catch (err) {
@@ -51,11 +53,11 @@ describe('routes - movies', function () {
 
     test('should respond with a recovered movie', async function () {
       try {
-        const { id } = moviesMock[0]
+        const { id } = fakeMovies[0]
         const response = await request.get(`/api/movies/${id}`).set(headers)
 
         expect(response.body).toEqual({
-          data: moviesMock[0],
+          data: fakeMovies[0],
           message: 'movie retrieved'
         })
       } catch (err) {
@@ -66,11 +68,11 @@ describe('routes - movies', function () {
 
     test('should respond with the list of movies by tags', async function () {
       try {
-        const [tag1, tag2] = moviesMock[0].tags ?? []
+        const [tag1, tag2] = fakeMovies[0].tags ?? []
         const response = await request.get(`/api/movies?tags=${tag1}&tags=${tag2}&tags=drama`).set(headers)
 
         expect(response.body).toEqual({
-          data: moviesMock,
+          data: fakeMovies,
           message: 'movies listed'
         })
       } catch (err) {
@@ -79,14 +81,22 @@ describe('routes - movies', function () {
       }
     })
 
-    test('should respond with new movie', async function () {
+    test('should respond with new movie POST', async function () {
       try {
-        const response = await request.post('/api/movies').set(headers)
-
+        const response = await request.post('/api/movies').set(headers).expect(201)
         expect(response.body).toEqual({
-          data: moviesMock[0],
+          data: fakeMovies[0],
           message: 'movie created'
         })
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
+
+    test('movie route no fount should respond with status code 404', async function () {
+      try {
+        await request.post('/api/movies/create').set(headers).expect(404)
       } catch (err) {
         console.log(':( algo salió mal!', err)
         throw err
