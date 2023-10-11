@@ -27,7 +27,9 @@ describe('services - movies', function () {
   let moviesService: MoviesService
   beforeEach(() => {
     moviesService = new MoviesService()
-    jest.clearAllMocks()
+    // jest.clearAllMocks()
+    // mockGetAll.mockClear()
+    mockGetAll.mockReset()
   })
 
   describe('when getMovies method is called', function () {
@@ -49,6 +51,18 @@ describe('services - movies', function () {
       expect(movies).toBeTruthy()
       expect(movies.length).toEqual(fakeMovies.length)
       expect(movies).toEqual(fakeMovies)
+      expect(mockGetAll).toHaveBeenCalledWith('movies', expectedQuery)
+    })
+
+    test('should return an empty array if no movies are found', async function () {
+      const movies = await moviesService.getMovies({ tags: 'Drama' })
+      const expectedQuery = {
+        tags: { $elemMatch: { $options: 'i', $regex: 'Drama' } }
+      }
+
+      expect(movies).toBeTruthy()
+      expect(movies.length).toEqual(0)
+      expect(movies).toEqual([])
       expect(mockGetAll).toHaveBeenCalledWith('movies', expectedQuery)
     })
   })
