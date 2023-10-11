@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 // const proxyquire = require('proxyquire')
 
-import { MongoLibMock, getAllStub } from '../utils/mocks/mongoLib'
+import { MongoLibMock, getAllStub, createStub } from '../utils/mocks/mongoLib'
 
-import { createRandomMovies, filteredMoviesMock } from '../utils/mocks/movies'
+import { createOneMovie, createRandomMovies, filteredMoviesMock } from '../utils/mocks/movies'
 import { MoviesService } from '../services/movies'
 
 jest.mock('../lib/mongo', () => {
@@ -16,6 +16,7 @@ describe('services - movies', function () {
   let moviesService: MoviesService
   beforeEach(() => {
     moviesService = new MoviesService()
+    jest.clearAllMocks()
     jest.resetAllMocks()
   })
 
@@ -74,6 +75,17 @@ describe('services - movies', function () {
         expect(movies.some((movie) => movie.tags.includes(tag))).toBeTruthy()
       })
       expect(getAllStub).toHaveBeenCalledWith('movies', expectedQuery)
+    })
+
+    test('should return an new movie', async () => {
+      const fakeMovie = createOneMovie()
+      createStub.mockResolvedValue(fakeMovie)
+
+      const movie = await moviesService.createMovie({ movie: fakeMovie })
+
+      expect(movie).toBeTruthy()
+      expect(movie).toEqual(fakeMovie)
+      expect(movie?.id).toBeDefined()
     })
   })
 })
