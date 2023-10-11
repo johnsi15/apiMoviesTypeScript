@@ -1,25 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 // const proxyquire = require('proxyquire')
 
-// import { MongoLibMock, getAllStub } from '../utils/mocks/mongoLib'
+import { MongoLibMock, getAllStub } from '../utils/mocks/mongoLib'
 
-import { createRandomMovies } from '../utils/mocks/movies'
+import { createRandomMovies, filteredMoviesMock } from '../utils/mocks/movies'
 import { MoviesService } from '../services/movies'
-
-// jest.mock('../lib/mongo', () => {
-//   return {
-//     MongoLib: MongoLibMock
-//   }
-// })
-
-const mockGetAll = jest.fn() // mock or spy
 
 jest.mock('../lib/mongo', () => {
   return {
-    MongoLib: jest.fn().mockImplementation(() => ({
-      getAll: mockGetAll,
-      create: () => {}
-    }))
+    MongoLib: MongoLibMock
   }
 })
 
@@ -27,21 +16,19 @@ describe('services - movies', function () {
   let moviesService: MoviesService
   beforeEach(() => {
     moviesService = new MoviesService()
-    // jest.clearAllMocks()
-    // mockGetAll.mockClear()
-    mockGetAll.mockReset()
+    jest.resetAllMocks()
   })
 
   describe('when getMovies method is called', function () {
     test('should call the getall MongoLib method', async () => {
       await moviesService.getMovies({ tags: '' })
-      expect(mockGetAll).toHaveBeenCalled()
-      expect(mockGetAll).toHaveBeenCalledTimes(1)
+      expect(getAllStub).toHaveBeenCalled()
+      expect(getAllStub).toHaveBeenCalledTimes(1)
     })
 
-    test('should return an array of movies', async function () {
+    test('should return an array of movies', async () => {
       const fakeMovies = createRandomMovies(20)
-      mockGetAll.mockResolvedValue(fakeMovies)
+      getAllStub.mockResolvedValue(fakeMovies)
       const movies = await moviesService.getMovies({ tags: '' })
 
       const expectedQuery = {
@@ -51,19 +38,42 @@ describe('services - movies', function () {
       expect(movies).toBeTruthy()
       expect(movies.length).toEqual(fakeMovies.length)
       expect(movies).toEqual(fakeMovies)
-      expect(mockGetAll).toHaveBeenCalledWith('movies', expectedQuery)
+      expect(getAllStub).toHaveBeenCalledWith('movies', expectedQuery)
     })
 
-    test('should return an empty array if no movies are found', async function () {
-      const movies = await moviesService.getMovies({ tags: 'Drama' })
+    test('should return an empty array if no movies are found', async () => {
+      const fakeMovies = filteredMoviesMock({ tags: ['tagnofound'] })
+      getAllStub.mockResolvedValue(fakeMovies)
+
+      const movies = await moviesService.getMovies({ tags: 'tagnofound' })
       const expectedQuery = {
-        tags: { $elemMatch: { $options: 'i', $regex: 'Drama' } }
+        tags: { $elemMatch: { $options: 'i', $regex: 'tagnofound' } }
       }
 
       expect(movies).toBeTruthy()
       expect(movies.length).toEqual(0)
       expect(movies).toEqual([])
-      expect(mockGetAll).toHaveBeenCalledWith('movies', expectedQuery)
+      expect(getAllStub).toHaveBeenCalledWith('movies', expectedQuery)
+    })
+
+    test('should return an array of movies filter by tags', async () => {
+      const TAGS = ['Drama', 'Acción', 'Misterio']
+
+      const fakeMovies = filteredMoviesMock({ tags: TAGS })
+      getAllStub.mockResolvedValue(fakeMovies)
+
+      const movies = await moviesService.getMovies({ tags: TAGS })
+      const expectedQuery = {
+        tags: { $in: [/Drama/i, /Acción/i, /Misterio/i] }
+      }
+
+      expect(movies).toBeTruthy()
+      expect(movies).toEqual(fakeMovies)
+      expect(movies.length).toEqual(fakeMovies.length)
+      fakeMovies[0].tags?.forEach((tag) => {
+        expect(movies.some((movie) => movie.tags.includes(tag))).toBeTruthy()
+      })
+      expect(getAllStub).toHaveBeenCalledWith('movies', expectedQuery)
     })
   })
 })

@@ -33,11 +33,11 @@ describe('routes - movies', function () {
   })
 
   describe('GET /movies', function () {
-    test('should respond with status 200', async function () {
+    test('should respond with status 200', async () => {
       await request.get('/api/movies').set(headers).expect(200)
     })
 
-    test('should respond with the list of movies', async function () {
+    test('should respond with the list of movies', async () => {
       try {
         const response = await request.get('/api/movies').set(headers)
 
@@ -51,7 +51,7 @@ describe('routes - movies', function () {
       }
     })
 
-    test('should respond with a recovered movie', async function () {
+    test('should respond with a recovered movie', async () => {
       try {
         const { id } = fakeMovies[0]
         const response = await request.get(`/api/movies/${id}`).set(headers)
@@ -66,7 +66,7 @@ describe('routes - movies', function () {
       }
     })
 
-    test('should respond with the list of movies by tags', async function () {
+    test('should respond with the list of movies by tags', async () => {
       try {
         const [tag1, tag2] = fakeMovies[0].tags ?? []
         const response = await request.get(`/api/movies?tags=${tag1}&tags=${tag2}&tags=drama`).set(headers)
@@ -81,7 +81,7 @@ describe('routes - movies', function () {
       }
     })
 
-    test('should respond with new movie POST', async function () {
+    test('should respond with new movie POST', async () => {
       try {
         const response = await request.post('/api/movies').set(headers).expect(201)
         expect(response.body).toEqual({
@@ -94,7 +94,7 @@ describe('routes - movies', function () {
       }
     })
 
-    test('movie route no fount should respond with status code 404', async function () {
+    test('movie route no fount should respond with status code 404', async () => {
       try {
         await request.post('/api/movies/create').set(headers).expect(404)
       } catch (err) {

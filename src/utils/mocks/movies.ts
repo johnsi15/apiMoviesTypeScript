@@ -5,6 +5,14 @@ export interface MovieMock extends Movie {
   id: string
 }
 
+export const TAGS = ['Terror', 'Drama', 'Acción', 'Aventura', 'Comedia', 'Romance', 'Misterio']
+
+const getRandomTag = (tags: string[]): string => {
+  const randomIndex = Math.floor(Math.random() * tags.length)
+
+  return tags[randomIndex]
+}
+
 export const createOneMovie = (): MovieMock => {
   return {
     id: faker.database.mongodbObjectId(),
@@ -18,7 +26,8 @@ export const createOneMovie = (): MovieMock => {
     tags: [
       faker.lorem.word(),
       faker.lorem.word(),
-      faker.lorem.word()
+      faker.lorem.word(),
+      getRandomTag(TAGS)
     ]
   }
 }
@@ -35,12 +44,12 @@ export const createRandomMovies = (size: number): MovieMock[] => {
 
 export const fakeMovies: MovieMock[] = createRandomMovies(10)
 
-export function filteredMoviesMock (tag: { tags: string[] } | string): Movie[] {
+export function filteredMoviesMock ({ tags }: { tags: string[] | string }): Movie[] | [] {
   // { tags: ['Drama'] }
-  if (typeof tag === 'string') {
-    return fakeMovies.filter(movie => movie.tags?.includes(tag))
-  } else if (Array.isArray(tag.tags)) {
-    return fakeMovies.filter(movie => movie.tags?.some(movieTag => tag.tags.includes(movieTag)))
+  if (typeof tags === 'string') {
+    return fakeMovies.filter(movie => movie.tags?.includes(tags))
+  } else if (Array.isArray(tags)) {
+    return fakeMovies.filter(movie => movie.tags?.some(movieTag => tags.includes(movieTag)))
   }
 
   return []

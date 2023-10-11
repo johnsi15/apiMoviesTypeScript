@@ -1,32 +1,18 @@
-import { fakeMovies, filteredMoviesMock } from './movies'
+// import { fakeMovies } from './movies'
 import { type Movie } from '../../types'
 
 export const getAllStub = jest.fn()
-
-getAllStub.mockImplementation(async (collection: string, query: string[]) => {
-  if (collection === 'movies' && query.some(q => q === 'Drama')) {
-    return await Promise.resolve(filteredMoviesMock('Drama'))
-  } else if (collection === 'movies') {
-    return await Promise.resolve(fakeMovies)
-  }
-
-  return await Promise.resolve([])
-})
-
 export const createStub = jest.fn()
 
-createStub.mockImplementation(async (_collection: string, data: Movie) => {
-  // return await Promise.resolve(fakeMovies[0].id)
-  return await Promise.resolve(data)
-})
+getAllStub.mockImplementation(() => ({ getAll: getAllStub }))
+createStub.mockImplementation(() => ({ create: createStub }))
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class MongoLibMock {
-  static getAll = getAllStub
-  static create = createStub
+  getAll (collection: string, query: string | string[]): void {
+    return getAllStub(collection, query)
+  }
 
-  static reset (): void {
-    this.getAll.mockReset()
-    this.create.mockReset()
+  create (collection: string, data: Movie): void {
+    return createStub(collection, data)
   }
 }
