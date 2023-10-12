@@ -1,5 +1,5 @@
-// import { fakeMovies } from './movies'
-import { type Movie } from '../../types'
+import { type MovieMock } from './movies'
+// import { type Movie } from '../../types'
 
 export const getAllStub = jest.fn()
 export const createStub = jest.fn()
@@ -12,7 +12,7 @@ export class MongoLibMock {
     return getAllStub(collection, query)
   }
 
-  create (collection: string, data: Movie): void {
+  create (collection: string, data: MovieMock): void {
     return createStub(collection, data)
   }
 }

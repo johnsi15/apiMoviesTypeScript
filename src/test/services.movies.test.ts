@@ -79,13 +79,14 @@ describe('services - movies', function () {
 
     test('should return an new movie', async () => {
       const fakeMovie = createOneMovie()
-      createStub.mockResolvedValue(fakeMovie)
+      const fakeIdMovie = fakeMovie.id
+      createStub.mockResolvedValue(fakeIdMovie)
 
-      const movie = await moviesService.createMovie({ movie: fakeMovie })
+      const createMovieId = await moviesService.createMovie({ movie: fakeMovie })
 
-      expect(movie).toBeTruthy()
-      expect(movie).toEqual(fakeMovie)
-      expect(movie?.id).toBeDefined()
+      expect(createMovieId).toBeTruthy()
+      expect(createMovieId).toBeDefined()
+      expect(createMovieId).toEqual(fakeIdMovie)
     })
   })
 })
