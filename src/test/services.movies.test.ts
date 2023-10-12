@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 // const proxyquire = require('proxyquire')
 
-import { MongoLibMock, getAllStub, createStub } from '../utils/mocks/mongoLib'
+import { MongoLibMock, getAllStub, createStub, getByIdStub } from '../utils/mocks/mongoLib'
 
 import { createOneMovie, createRandomMovies, filteredMoviesMock } from '../utils/mocks/movies'
 import { MoviesService } from '../services/movies'
@@ -77,16 +77,30 @@ describe('services - movies', function () {
       expect(getAllStub).toHaveBeenCalledWith('movies', expectedQuery)
     })
 
-    test('should return an new movie', async () => {
+    test('should return an movie by id', async () => {
       const fakeMovie = createOneMovie()
-      const fakeIdMovie = fakeMovie.id
-      createStub.mockResolvedValue(fakeIdMovie)
+      const fakeMovieId = fakeMovie.id
+      getByIdStub.mockResolvedValue(fakeMovie)
+
+      const movie = await moviesService.getMovie({ movieId: fakeMovieId })
+      console.log({ movie })
+      expect(movie).toBeTruthy()
+      expect(movie).toEqual(fakeMovie)
+      expect(movie?.id).toEqual(fakeMovieId)
+      expect(getByIdStub).toHaveBeenCalledWith('movies', fakeMovieId)
+    })
+
+    test('should return a newly created movie', async () => {
+      const fakeMovie = createOneMovie()
+      const fakeMovieId = fakeMovie.id
+      createStub.mockResolvedValue(fakeMovieId)
 
       const createMovieId = await moviesService.createMovie({ movie: fakeMovie })
 
       expect(createMovieId).toBeTruthy()
       expect(createMovieId).toBeDefined()
-      expect(createMovieId).toEqual(fakeIdMovie)
+      expect(createMovieId).toEqual(fakeMovieId)
+      expect(createStub).toHaveBeenCalledWith('movies', fakeMovie)
     })
   })
 })
