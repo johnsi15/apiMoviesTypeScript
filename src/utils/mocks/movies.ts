@@ -45,7 +45,6 @@ export const createRandomMovies = (size: number): MovieMock[] => {
 export const fakeMovies: MovieMock[] = createRandomMovies(10)
 
 export function filteredMoviesMock ({ tags }: { tags: string[] | string }): Movie[] | [] {
-  // { tags: ['Drama'] }
   if (typeof tags === 'string') {
     return fakeMovies.filter(movie => movie.tags?.includes(tags))
   } else if (Array.isArray(tags)) {

@@ -9,6 +9,7 @@
     "tsc": "tsc",
     "test": "NODE_ENV=test jest",
     "test:watch": "npm run test -- --watch",
+    "test:e2e": "npm run test -- --config ./src/test/e2e/jest-e2e.json",
     "lint": "ts-standard"
   },
   "repository": {

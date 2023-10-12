@@ -83,7 +83,7 @@ describe('services - movies', function () {
       getByIdStub.mockResolvedValue(fakeMovie)
 
       const movie = await moviesService.getMovie({ movieId: fakeMovieId })
-      console.log({ movie })
+
       expect(movie).toBeTruthy()
       expect(movie).toEqual(fakeMovie)
       expect(movie?.id).toEqual(fakeMovieId)
