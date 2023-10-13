@@ -1,4 +1,7 @@
+import { type ObjectId } from 'mongodb'
+
 export interface Movie {
+  _id?: ObjectId | undefined
   title: string
   year: number
   cover: string

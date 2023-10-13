@@ -4,6 +4,7 @@ import { testServer } from '../../utils/testServer'
 import { createAuthToken } from '../../utils/authToken'
 import { createRandomMovies } from '../../utils/mocks/movies'
 import { moviesApi } from '../../routes/movies'
+import { getAllMovies } from './helpers'
 import { config } from '../../config'
 
 const USER = encodeURIComponent(config.dbUser)
@@ -14,7 +15,12 @@ const MONGO_URI = `mongodb+srv://${USER}:${PASSWORD}@${config.dbHost}/?retryWrit
 
 describe('routes and services movies intregation e2e', () => {
   let request: ReturnType<typeof testServer>
-  let headers = {}
+  let headers: {
+    Authorization: string
+    Accept: string
+    'X-Requested-With': string
+    'Content-Type': string
+  }
   let database: Db
   let seedMovies: {
     insertedCount: number
@@ -63,8 +69,9 @@ describe('routes and services movies intregation e2e', () => {
   })
 
   afterEach(async () => {
-    await database.collection(collectionMovies).drop()
-    await database.collection(collectionUsers).drop()
+    // await database.collection(collectionMovies).drop()
+    // await database.collection(collectionUsers).drop()
+    await database.dropDatabase()
   })
 
   afterAll(async () => {
@@ -98,45 +105,46 @@ describe('routes and services movies intregation e2e', () => {
       }
     })
 
-    // test('should respond with a recovered movie', async () => {
-    //   const fakeMovie = createOneMovie()
-    //   const fakeMovieId = fakeMovie.id
+    test('should respond with a recovered movie', async () => {
+      const movies = await getAllMovies({ headers })
+      console.log({ movies })
+      const movieId = movies[0]._id?.toString()
 
-    //   try {
-    //     const { body, statusCode } = await request.get(`/api/movies/${fakeMovieId}`).set(headers)
+      try {
+        const { body, statusCode } = await request.get(`/api/movies/${movieId}`).set(headers)
 
-    //     expect(statusCode).toBe(200)
-    //     expect(body).toHaveProperty('data')
-    //     expect(body).toHaveProperty('message')
-    //     expect(body.message).toBe('movie retrieved')
-    //     expect(body).toEqual({
-    //       data: fakeMovie,
-    //       message: 'movie retrieved'
-    //     })
-    //   } catch (err) {
-    //     console.log(':( algo salió mal!', err)
-    //     throw err
-    //   }
-    // })
+        expect(statusCode).toBe(200)
+        expect(body).toHaveProperty('data')
+        expect(body).toHaveProperty('message')
+        expect(body.message).toBe('movie retrieved')
+        expect(body).toEqual({
+          data: movies[0],
+          message: 'movie retrieved'
+        })
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
 
-    // test('should respond with the list of movies by tags', async () => {
-    //   const TAGS = ['Drama', 'Acción', 'Misterio']
-    //   const fakeMovies = createRandomMovies(10)
+    test('should respond with the list of movies by tags', async () => {
+      const TAGS = ['Drama', 'Acción', 'Misterio']
+      const movies = await getAllMovies({ headers, tags: TAGS })
 
-    //   try {
-    //     const { body, statusCode } = await request.get(`/api/movies?tags=${TAGS[0]}&tags=${TAGS[1]}&tags=${TAGS[2]}`).set(headers)
+      try {
+        const { body, statusCode } = await request.get(`/api/movies?tags=${TAGS[0]}&tags=${TAGS[1]}&tags=${TAGS[2]}`).set(headers)
 
-    //     expect(statusCode).toBe(200)
-    //     expect(body.data.length).toEqual(fakeMovies.length)
-    //     expect(body).toEqual({
-    //       data: fakeMovies,
-    //       message: 'movies listed'
-    //     })
-    //   } catch (err) {
-    //     console.log(':( algo salió mal!', err)
-    //     throw err
-    //   }
-    // })
+        expect(statusCode).toBe(200)
+        expect(body.data).toHaveLength(movies.length)
+        expect(body).toEqual({
+          data: movies,
+          message: 'movies listed'
+        })
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
 
     // test('should respond with a newly created movie POST', async () => {
     //   const fakeMovie = createOneMovie()

@@ -14,9 +14,13 @@ interface Headers {
   'Content-Type': string
 }
 
-export const getAllMovies = async ({ headers }: { headers: Headers }): Promise<{ movies: Movie }> => {
-  const response = await request.get('/api/movies').set(headers)
-  return {
-    movies: response.body.data
+export const getAllMovies = async ({ headers, tags }: { headers: Headers, tags?: string[] }): Promise<Movie[]> => {
+  if (tags != null && tags.length > 0) {
+    const query = `?tags=${tags[0]}&tags=${tags[1]}&tags=${tags[2]}`
+    const response = await request.get(`/api/movies${query}`).set(headers)
+    return response.body.data
   }
+
+  const response = await request.get('/api/movies').set(headers)
+  return response.body.data
 }
