@@ -2,7 +2,7 @@ import { type Db, MongoClient, ServerApiVersion } from 'mongodb'
 import { type Express } from 'express'
 import { testServer } from '../../utils/testServer'
 import { createAuthToken } from '../../utils/authToken'
-import { type MovieMock, createRandomMovies } from '../../utils/mocks/movies'
+import { createRandomMovies } from '../../utils/mocks/movies'
 import { moviesApi } from '../../routes/movies'
 import { config } from '../../config'
 
@@ -20,7 +20,6 @@ describe('routes and services movies intregation e2e', () => {
     insertedCount: number
   }
   let client: MongoClient
-  let fakeMovies: MovieMock[] = []
 
   const collectionMovies = 'movies'
   const collectionUsers = 'users'
@@ -59,7 +58,7 @@ describe('routes and services movies intregation e2e', () => {
     // jest.clearAllMocks()
     await database.collection(collectionUsers).insertOne(user)
 
-    fakeMovies = createRandomMovies(10)
+    const fakeMovies = createRandomMovies(10)
     seedMovies = await database.collection(collectionMovies).insertMany(fakeMovies)
   })
 
@@ -87,13 +86,12 @@ describe('routes and services movies intregation e2e', () => {
     test('should respond with the list of movies', async () => {
       try {
         const { body, statusCode } = await request.get('/api/movies').set(headers)
+        const { data, message } = body
 
         expect(statusCode).toBe(200)
-        expect(body.data.length).toHaveLength(seedMovies.insertedCount)
-        expect(body).toEqual({
-          data: body.data,
-          message: 'movies listed'
-        })
+        expect(Array.isArray(data)).toBe(true)
+        expect(data).toHaveLength(seedMovies.insertedCount)
+        expect(message).toBe('movies listed')
       } catch (err) {
         console.log(':( algo salió mal!', err)
         throw err
