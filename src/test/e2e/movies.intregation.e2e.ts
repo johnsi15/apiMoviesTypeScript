@@ -1,5 +1,5 @@
 import { type Express } from 'express'
-import { MongoLibMock, getAllStub, getByIdStub } from '../../utils/mocks/mongoLib'
+import { MongoLibMock, createStub, getAllStub, getByIdStub } from '../../utils/mocks/mongoLib'
 import { testServer } from '../../utils/testServer'
 import { createAuthToken } from '../../utils/authToken'
 import { createOneMovie, createRandomMovies, filteredMoviesMock } from '../../utils/mocks/movies'
@@ -101,6 +101,47 @@ describe('routes and services movies intregation e2e', () => {
           data: fakeMovies,
           message: 'movies listed'
         })
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
+
+    test('should respond with new movie POST', async () => {
+      const fakeMovie = createOneMovie()
+      const fakeMovieId = fakeMovie.id
+      createStub.mockResolvedValue(fakeMovieId)
+
+      try {
+        const { body, statusCode } = await request.post('/api/movies').set(headers).send(fakeMovie)
+
+        expect(statusCode).toBe(201)
+        expect(body).toHaveProperty('data')
+        expect(body).toHaveProperty('message')
+        expect(body.message).toBe('movie created')
+        expect(body.data).toBe(fakeMovieId)
+        expect(body).toEqual({
+          data: fakeMovieId,
+          message: 'movie created'
+        })
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
+
+    test('should respond 401 Unauthorized', async () => {
+      const headers = {
+        Authorization: 'Bearer xxxx',
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json'
+      }
+
+      try {
+        const { statusCode } = await request.get('/api/movies').set(headers)
+
+        expect(statusCode).toBe(401)
       } catch (err) {
         console.log(':( algo salió mal!', err)
         throw err
