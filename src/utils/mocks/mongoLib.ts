@@ -1,5 +1,4 @@
 import { type MovieMock } from './movies'
-// import { type Movie } from '../../types'
 
 export const getAllStub = jest.fn()
 export const getByIdStub = jest.fn()

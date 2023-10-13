@@ -5,9 +5,6 @@ import { createAuthToken } from '../../utils/authToken'
 import { createOneMovie, createRandomMovies, filteredMoviesMock } from '../../utils/mocks/movies'
 import { moviesApi } from '../../routes/movies'
 
-// import { createOneMovie, createRandomMovies, filteredMoviesMock } from '../utils/mocks/movies'
-// import { MoviesService } from '../services/movies'
-
 jest.mock('../../lib/mongo', () => {
   return {
     MongoLib: MongoLibMock
@@ -19,7 +16,7 @@ describe('routes and services movies intregation e2e', () => {
   let headers = {}
 
   beforeAll(async () => {
-    const authToken = createAuthToken()
+    const authToken = createAuthToken({})
 
     request = testServer((app: Express) => {
       moviesApi(app)
@@ -107,7 +104,7 @@ describe('routes and services movies intregation e2e', () => {
       }
     })
 
-    test('should respond with new movie POST', async () => {
+    test('should respond with a newly created movie POST', async () => {
       const fakeMovie = createOneMovie()
       const fakeMovieId = fakeMovie.id
       createStub.mockResolvedValue(fakeMovieId)

@@ -5,7 +5,7 @@ import { config } from '../config/index'
 
 const USER = encodeURIComponent(config.dbUser)
 const PASSWORD = encodeURIComponent(config.dbPassword)
-const DB_NAME = config.dbName
+const DB_NAME = config.nodeEnv === 'test' ? config.dbNameTest : config.dbName
 
 const MONGO_URI = `mongodb+srv://${USER}:${PASSWORD}@${config.dbHost}/?retryWrites=true&w=majority`
 
@@ -30,7 +30,7 @@ export class MongoLib {
       try {
         await this.client.connect()
 
-        console.log('Connected succesfully to mongodb')
+        console.log(`Connected succesfully to mongodb - ${this.dbName}`)
         MongoLib.connection = this.client.db(this.dbName)
       } catch (error) {
         console.error('Error connecting to the database')

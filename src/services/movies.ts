@@ -24,7 +24,6 @@ export class MoviesService {
     }
 
     const movies = await this.mongoDB.getAll(this.collection, query)
-    // console.log({ movies })
 
     return movies ?? []
   }

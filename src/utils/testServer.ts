@@ -8,3 +8,9 @@ export function testServer (route: RouteHandler): SuperTest<Test> {
   route(app)
   return supertest(app)
 }
+
+export function testServerAgent (route: RouteHandler): SuperTest<Test> {
+  const app = express()
+  route(app)
+  return supertest.agent(app)
+}

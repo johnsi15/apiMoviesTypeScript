@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken'
+import { type User } from '../types'
 import { config } from '../config'
 
-export function createAuthToken (): string {
+export function createAuthToken ({ user }: { user?: User }): string {
   const adminScopes = [
     'signin:auth',
     'signup:auth',
@@ -16,8 +17,8 @@ export function createAuthToken (): string {
 
   const payload = {
     sub: '1',
-    name: 'test',
-    email: 'test@email.com',
+    name: user?.name ?? 'test',
+    email: user?.email ?? 'test@email.com',
     scopes: adminScopes
   }
 

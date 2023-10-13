@@ -18,7 +18,7 @@ describe('routes - movies', function () {
   let headers = {}
 
   beforeAll(async () => {
-    const authToken = createAuthToken()
+    const authToken = createAuthToken({})
 
     request = testServer((app: Express) => {
       moviesApi(app)
