@@ -2,10 +2,11 @@ import { type Db, MongoClient, ServerApiVersion } from 'mongodb'
 import { type Express } from 'express'
 import { testServer } from '../../utils/testServer'
 import { createAuthToken } from '../../utils/authToken'
-import { createRandomMovies } from '../../utils/mocks/movies'
+import { createOneMovie } from '../../utils/mocks/movies'
 import { moviesApi } from '../../routes/movies'
-import { getAllMovies } from './helpers'
+import { getAllMovies, initialMovies } from './helpers'
 import { config } from '../../config'
+import { type Movie } from '../../types'
 
 const USER = encodeURIComponent(config.dbUser)
 const PASSWORD = encodeURIComponent(config.dbPassword)
@@ -26,6 +27,7 @@ describe('routes and services movies intregation e2e', () => {
     insertedCount: number
   }
   let client: MongoClient
+  let fakeMovies: Movie[]
 
   const collectionMovies = 'movies'
   const collectionUsers = 'users'
@@ -64,7 +66,7 @@ describe('routes and services movies intregation e2e', () => {
     // jest.clearAllMocks()
     await database.collection(collectionUsers).insertOne(user)
 
-    const fakeMovies = createRandomMovies(10)
+    fakeMovies = initialMovies()
     seedMovies = await database.collection(collectionMovies).insertMany(fakeMovies)
   })
 
@@ -107,7 +109,6 @@ describe('routes and services movies intregation e2e', () => {
 
     test('should respond with a recovered movie', async () => {
       const movies = await getAllMovies({ headers })
-      console.log({ movies })
       const movieId = movies[0]._id?.toString()
 
       try {
@@ -146,44 +147,47 @@ describe('routes and services movies intregation e2e', () => {
       }
     })
 
-    // test('should respond with a newly created movie POST', async () => {
-    //   const fakeMovie = createOneMovie()
-    //   const fakeMovieId = fakeMovie.id
+    test('should respond with a newly created movie POST', async () => {
+      const fakeMovie = createOneMovie()
+      const { id, ...data } = fakeMovie
 
-    //   try {
-    //     const { body, statusCode } = await request.post('/api/movies').set(headers).send(fakeMovie)
+      try {
+        const { body, statusCode } = await request.post('/api/movies').set(headers).send(data)
 
-    //     expect(statusCode).toBe(201)
-    //     expect(body).toHaveProperty('data')
-    //     expect(body).toHaveProperty('message')
-    //     expect(body.message).toBe('movie created')
-    //     expect(body.data).toBe(fakeMovieId)
-    //     expect(body).toEqual({
-    //       data: fakeMovieId,
-    //       message: 'movie created'
-    //     })
-    //   } catch (err) {
-    //     console.log(':( algo salió mal!', err)
-    //     throw err
-    //   }
-    // })
+        const movies = await getAllMovies({ headers })
 
-    // test('should respond 401 Unauthorized', async () => {
-    //   const headers = {
-    //     Authorization: 'Bearer xxxx',
-    //     Accept: 'application/json',
-    //     'X-Requested-With': 'XMLHttpRequest',
-    //     'Content-Type': 'application/json'
-    //   }
+        expect(statusCode).toBe(201)
+        expect(body).toHaveProperty('data')
+        expect(body).toHaveProperty('message')
+        expect(body.message).toBe('movie created')
+        // expect(body.data).toBe(fakeMovieId)
+        expect(movies).toHaveLength(fakeMovies.length + 1)
+        expect(body).toEqual({
+          data: body.data,
+          message: 'movie created'
+        })
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
 
-    //   try {
-    //     const { statusCode } = await request.get('/api/movies').set(headers)
+    test('should respond 401 Unauthorized', async () => {
+      const headers = {
+        Authorization: 'Bearer xxxx',
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json'
+      }
 
-    //     expect(statusCode).toBe(401)
-    //   } catch (err) {
-    //     console.log(':( algo salió mal!', err)
-    //     throw err
-    //   }
-    // })
+      try {
+        const { statusCode } = await request.get('/api/movies').set(headers)
+
+        expect(statusCode).toBe(401)
+      } catch (err) {
+        console.log(':( algo salió mal!', err)
+        throw err
+      }
+    })
   })
 })

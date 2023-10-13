@@ -2,6 +2,7 @@ import { type Express } from 'express'
 import { testServer } from '../../utils/testServer'
 import { moviesApi } from '../../routes/movies'
 import { type Movie } from '../../types'
+import { createRandomMovies } from '../../utils/mocks/movies'
 
 const request = testServer((app: Express) => {
   moviesApi(app)
@@ -12,6 +13,11 @@ interface Headers {
   Accept: string
   'X-Requested-With': string
   'Content-Type': string
+}
+
+export const initialMovies = (): Movie[] => {
+  const fakeMovies = createRandomMovies(10)
+  return fakeMovies
 }
 
 export const getAllMovies = async ({ headers, tags }: { headers: Headers, tags?: string[] }): Promise<Movie[]> => {
