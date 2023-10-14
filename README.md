@@ -193,7 +193,7 @@ let data = await response.json();
 console.log(data);
 
 ```
-#### #### Obtener una lista de películas pública
+#### Obtener una lista de películas pública
 
 GET /api/movies/public
 ```js
