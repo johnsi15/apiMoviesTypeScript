@@ -71,8 +71,6 @@ describe('routes and services movies intregation e2e', () => {
   })
 
   afterEach(async () => {
-    // await database.collection(collectionMovies).drop()
-    // await database.collection(collectionUsers).drop()
     await database.dropDatabase()
   })
 
@@ -160,7 +158,6 @@ describe('routes and services movies intregation e2e', () => {
         expect(body).toHaveProperty('data')
         expect(body).toHaveProperty('message')
         expect(body.message).toBe('movie created')
-        // expect(body.data).toBe(fakeMovieId)
         expect(movies).toHaveLength(fakeMovies.length + 1)
         expect(body).toEqual({
           data: body.data,
