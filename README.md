@@ -193,3 +193,21 @@ let data = await response.json();
 console.log(data);
 
 ```
+#### #### Obtener una lista de películas pública
+
+GET /api/movies/public
+```js
+let headersList = {
+  "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+  "Accept": "*/*, application/json",
+  "X-Requested-With": "XMLHttpRequest"
+}
+
+let response = await fetch("https://movies-john-serrano.koyeb.app/api/movies/public", { 
+  method: "GET",
+  headers: headersList
+});
+
+let data = await response.json();
+console.log(data);
+```
