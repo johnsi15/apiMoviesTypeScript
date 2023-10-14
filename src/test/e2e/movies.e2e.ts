@@ -14,6 +14,12 @@ const DB_NAME = config.dbNameTest
 
 const MONGO_URI = `mongodb+srv://${USER}:${PASSWORD}@${config.dbHost}/?retryWrites=true&w=majority`
 
+const USER_NAME = 'Andrey provider'
+const USER_EMAIL = 'japrovider@gmail.com'
+const USER_PASSWORD = 'secret'
+const BODY_DATA = 'data'
+const BODY_MESSAGE = 'message'
+
 describe('routes and services movies intregation e2e', () => {
   let request: ReturnType<typeof testServer>
   let headers: {
@@ -32,9 +38,9 @@ describe('routes and services movies intregation e2e', () => {
   const collectionMovies = 'movies'
   const collectionUsers = 'users'
   const user = {
-    name: 'Andrey provider',
-    email: 'japrovider@gmail.com',
-    password: 'secret'
+    name: USER_NAME,
+    email: USER_EMAIL,
+    password: USER_PASSWORD
   }
 
   beforeAll(async () => {
@@ -113,8 +119,8 @@ describe('routes and services movies intregation e2e', () => {
         const { body, statusCode } = await request.get(`/api/movies/${movieId}`).set(headers)
 
         expect(statusCode).toBe(200)
-        expect(body).toHaveProperty('data')
-        expect(body).toHaveProperty('message')
+        expect(body).toHaveProperty(BODY_DATA)
+        expect(body).toHaveProperty(BODY_MESSAGE)
         expect(body.message).toBe('movie retrieved')
         expect(body).toEqual({
           data: movies[0],
@@ -155,8 +161,8 @@ describe('routes and services movies intregation e2e', () => {
         const movies = await getAllMovies({ headers })
 
         expect(statusCode).toBe(201)
-        expect(body).toHaveProperty('data')
-        expect(body).toHaveProperty('message')
+        expect(body).toHaveProperty(BODY_DATA)
+        expect(body).toHaveProperty(BODY_MESSAGE)
         expect(body.message).toBe('movie created')
         expect(movies).toHaveLength(fakeMovies.length + 1)
         expect(body).toEqual({
