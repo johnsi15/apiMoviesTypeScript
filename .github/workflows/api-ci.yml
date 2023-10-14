@@ -43,17 +43,17 @@ jobs:
   
   e2e:
     runs-on: ubuntu-latest
-    container:
-      image: node:18
+    # container:
+    #   image: node:18
 
-    services:
-      mongo-e2e:
-        image: mongo:4.4
-        ports:
-          - 27017:27017
-        env:
-          MONGO_INITDB_ROOT_USERNAME: test
-          MONGO_INITDB_ROOT_PASSWORD: test123
+    # services:
+    #   mongo-e2e:
+    #     image: mongo:4.4
+    #     ports:
+    #       - 27017:27017
+    #     env:
+    #       MONGO_INITDB_ROOT_USERNAME: test
+    #       MONGO_INITDB_ROOT_PASSWORD: test123
 
     steps:
       - name: Checkout
@@ -65,7 +65,7 @@ jobs:
         shell: bash
         run: npm run test:e2e
         env:
-          DB_NAME_TEST: db-movies-test
-          DB_USER: test
-          DB_PASSWORD: test123
-          DB_HOST: mongo-e2e
+          DB_NAME_TEST: ${{ vars.DB_NAME_TEST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
