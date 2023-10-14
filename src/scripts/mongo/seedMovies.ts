@@ -3,7 +3,7 @@
 import chalk from 'chalk'
 import { debug } from 'debug'
 import { MongoLib } from '../../lib/mongo'
-import { moviesMock } from '../../utils/mocks/movies'
+import { fakeMovies } from '../../utils/mocks/movies'
 
 const logger = debug('app:scripts:movies')
 
@@ -11,7 +11,7 @@ async function seedMovies (): Promise<void> {
   try {
     const mongoDB = new MongoLib()
 
-    const promises = moviesMock.map(async movie => {
+    const promises = fakeMovies.map(async movie => {
       await mongoDB.create('movies', movie)
     })
 

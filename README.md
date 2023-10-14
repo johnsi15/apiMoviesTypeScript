@@ -48,13 +48,13 @@ Este proyecto es una API que proporciona información sobre películas. Puedes u
 - `/api/movies?tags=Acción&tags=Misterio&tags=Drama`: Busca películas por tags.
 - `/api/movies`: Agrega una nueva película.
 
-### Autenticación
+## Autenticación
 
 Si es necesario autenticarse para acceder a ciertos recursos, debes incluir un encabezado de autorización en tu solicitud. Ejemplo:
 
 `Authorization: Bearer tu_token_de_acceso`
 
-# API de Autenticación
+## API de Autenticación
 
 Este proyecto permite a los usuarios registrarse como proveedores de servicios. A continuación, se muestra un ejemplo de cómo puedes registrarte como proveedor utilizando esta API de películas.
 
@@ -75,11 +75,13 @@ let headersList = {
   "Content-Type": "application/json"
 }
 
+const PUBLIC_KEY_TOKEN = '52ec1f8156f18dcd8057f49ed71719be77112e537dd382cef3f60f1c5d5d936e'
+
 let bodyContent = JSON.stringify({
 	"name": "Andrey provider",
 	"email": "japrovider@gmail.com",
 	"password": "secret",
-	"apiKeyToken": "apiKey_token"
+	"apiKeyToken": PUBLIC_KEY_TOKEN
 });
 
 let response = await fetch("http://localhost:3000/api/auth/sign-provider", { 
