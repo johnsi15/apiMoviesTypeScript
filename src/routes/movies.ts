@@ -19,6 +19,22 @@ export function moviesApi (app: Express): void {
 
   const moviesService = new MoviesService()
 
+  router.get('/public', async function (req, res, next) {
+    cacheResponse(res, FIVE_MINUTES_IN_SECONDS)
+    const { tags } = req.query as { tags: string[] | string }
+
+    try {
+      const movies = await moviesService.getMovies({ tags })
+
+      res.status(200).json({
+        data: movies,
+        message: 'movies listed'
+      })
+    } catch (err) {
+      next(err)
+    }
+  })
+
   router.get('/', passport.authenticate('jwt', { session: false }), scopesValidationHandler(['read:movies']), async function (req, res, next) {
     cacheResponse(res, FIVE_MINUTES_IN_SECONDS)
     const { tags } = req.query as { tags: string[] | string }
