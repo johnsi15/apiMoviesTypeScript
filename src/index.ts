@@ -25,6 +25,11 @@ app.use(cors(corsOptions))
 
 app.disable('x-powered-by')
 
+// Healthcheck
+app.get('/healthcheck', (_req, res) => {
+  res.send('OK')
+})
+
 // Routes
 authApi(app)
 moviesApi(app)
