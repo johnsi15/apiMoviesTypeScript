@@ -1,6 +1,11 @@
 name: API MOVIES CI
 
-on: [push]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 
 defaults:
   run:
@@ -9,6 +14,11 @@ defaults:
 jobs:
   unit-test:
     runs-on: ubuntu-latest
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,7 +26,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
+          cache: "npm"
       - name: install
         shell: bash
         run: npm ci
@@ -33,14 +43,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
+          cache: "npm"
       - name: install
         shell: bash
         run: npm ci
       - name: run lint
         shell: bash
         run: npm run lint --silent
-  
+
   e2e:
     runs-on: ubuntu-latest
     # container:
