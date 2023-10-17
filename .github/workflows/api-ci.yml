@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-      - name: install
+      - name: Install
         shell: bash
         run: npm ci
       - name: run lint
@@ -48,7 +48,7 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-      - name: install
+      - name: Install
         shell: bash
         run: npm ci
       - name: build
@@ -69,7 +69,7 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-      - name: install
+      - name: Install
         shell: bash
         run: npm ci
       - uses: actions/download-artifact@v3
@@ -98,7 +98,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: install
+      - name: Install
         shell: bash
         run: npm ci
       - uses: actions/download-artifact@v3
@@ -113,3 +113,10 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_HOST: ${{ secrets.DB_HOST }}
+
+  deploy:
+    needs: [unit-test, e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run deploy
+        run: echo 'Here do the deploy'
