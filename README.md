@@ -1,3 +1,5 @@
+[![API MOVIES CI](https://github.com/johnsi15/apiMoviesTypeScript/actions/workflows/api-ci.yml/badge.svg)](https://github.com/johnsi15/apiMoviesTypeScript/actions/workflows/api-ci.yml)
+
 # Movies
 
 ¿How does that work?
