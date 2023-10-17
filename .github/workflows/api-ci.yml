@@ -118,5 +118,7 @@ jobs:
     needs: [unit-test, e2e]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Run deploy
         run: echo 'Here do the deploy'
